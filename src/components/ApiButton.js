@@ -33,11 +33,11 @@ const ApiButton = ({ editData, navigate, applyChanges, backToList, module }) => 
           <Row>
             <Col >
          
-              <HasAccess
+              {/* <HasAccess
                 roles={null}
                 permissions={`${module}-edit`}
                 renderAuthFailed={<p></p>}
-        >
+        > */}
                 <Button
                   onClick={() => {
                     editData();
@@ -46,14 +46,14 @@ const ApiButton = ({ editData, navigate, applyChanges, backToList, module }) => 
                   color="primary">
                   Save
                 </Button>
-              </HasAccess>
+              {/* </HasAccess> */}
             </Col>
             <Col >
-              <HasAccess
+              {/* <HasAccess
                 roles={null}
                 permissions={`${module}-edit`}
                 renderAuthFailed={<p></p>}
-              >
+              > */}
                 <Button
                   onClick={() => {
                     editData();
@@ -63,7 +63,7 @@ const ApiButton = ({ editData, navigate, applyChanges, backToList, module }) => 
                 >
                   Apply
                 </Button>
-              </HasAccess>
+              {/* </HasAccess> */}
             </Col>
             <Col>
               <Button
@@ -76,14 +76,14 @@ const ApiButton = ({ editData, navigate, applyChanges, backToList, module }) => 
               </Button>
             </Col>
             <Col>
-              <HasAccess
+              {/* <HasAccess
                 roles={null}
                 permissions={`${module}-remove`}
-                renderAuthFailed={<p>You are not authorized to access!</p>}>
+                renderAuthFailed={<p>You are not authorized to access!</p>}> */}
                 <Button color="danger" onClick={() => {}}>
                   Delete
                 </Button>
-              </HasAccess>
+              {/* </HasAccess> */}
             </Col>
           </Row>
         </ComponentCardV2>

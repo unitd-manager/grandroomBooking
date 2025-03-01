@@ -39,6 +39,21 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
               </Col>
               <Col md="3">
                 <FormGroup>
+                  <Label>
+                  To Booking Date <span className="required"> *</span>
+                  </Label>
+                  <Input
+                    type="date"
+                    onChange={handleInputs}
+                    value={
+                      bookingDetails && bookingDetails.to_booking_date
+                    }
+                    name="to_booking_date"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="3">
+                <FormGroup>
                   <Label>Customer Name</Label>
                   <Input
                     type="select"
@@ -57,21 +72,6 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
 
                    
                       })}
-                  </Input>
-                </FormGroup>
-              </Col>
-              <Col md="3">
-                <FormGroup>
-                  <Label>Court</Label>
-                  <Input
-                    value={bookingDetails && bookingDetails.hall}
-                    type="select"
-                    onChange={handleInputs}
-                    name="hall"
-                  >
-                    <option value="">Please Select</option>
-                    <option value="Court 1">Court 1</option>
-                    <option value="Court 2">Court 2</option>
                   </Input>
                 </FormGroup>
               </Col>

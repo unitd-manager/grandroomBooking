@@ -10,7 +10,7 @@ import { AppProvider } from './context/AppContext';
 import rbac from './context/role-based-access';
 // import ContextRBAC from './context/ContextRBAC';
 import VerifyRoute from './routes/VerifyRoute';
-import "@fortawesome/fontawesome-free/css/all.min.css";
+// import "@fortawesome/fontawesome-free/css/all.min.css";
 
 
 
