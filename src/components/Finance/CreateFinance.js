@@ -15,23 +15,24 @@ import PropTypes from 'prop-types';
 import api from '../../constants/api';
 import message from '../Message';
 
-const CreateFinance = ({ financeModal, setFinanceModal, projectId,getOrdersById }) => {
+const CreateFinance = ({ financeModal, setFinanceModal, bookingId,getOrdersById }) => {
   CreateFinance.propTypes = {
     financeModal: PropTypes.bool,
     setFinanceModal: PropTypes.func,
-    projectId: PropTypes.any,
+    bookingId: PropTypes.any,
     getOrdersById:PropTypes.func,
   };
 
-  const [projectDetails, setCreateOrder] = useState();
+  const [OrdersDetails, setCreateOrder] = useState();
+  const [bookingServicename, setBookingServiceName] = useState();
 
   const handleInserts = (e) => {
-    setCreateOrder({ ...projectDetails, [e.target.name]: e.target.value });
+    setCreateOrder({ ...OrdersDetails, [e.target.name]: e.target.value });
   };
 
   const getCompanyById = () => {
     api
-      .post('/project/getCompanyProjectById', { project_id: projectId })
+      .post('/booking/getBookingById', { booking_id: bookingId })
       .then((res) => {
         setCreateOrder(res.data.data);
       })
@@ -39,24 +40,64 @@ const CreateFinance = ({ financeModal, setFinanceModal, projectId,getOrdersById 
        // message('Costing Summary not found', 'info');
       });
   };
-  //Insert order for finance module
-  const insertOrder = () => {
-    projectDetails.project_id = projectId;
+
+  const getServiceLinked = () => {
     api
-      .post('/finance/insertOrder', projectDetails)
-      .then(() => {
-      
-        //setCreateOrder(res.data.data);
-        message('Invoice inserted successfully.', 'success');
-        //window.location.Reload();
-        getOrdersById();
+      .post('/booking/getBookingHisrtoryById', { booking_id: bookingId })
+      .then((res) => {
+        setBookingServiceName(res.data.data);
       })
       .catch(() => {
-        message('Network connection error.');
+        message('service linked not found', 'info');
       });
   };
+
+console.log('bookingServicename',bookingServicename)
+  //Insert order for finance module
+  const insertOrder = () => {
+    OrdersDetails.booking_id = bookingId;
+  
+    api
+      .post("/finance/insertOrder", OrdersDetails)
+      .then((res) => {
+        const insertedId = res.data.data.insertId;
+  
+        // Create an array of promises for order items
+        const orderItemPromises = bookingServicename.map((item) => {
+          const orderItem = {
+            contact_id: item.contact_id, 
+            order_id: insertedId,
+            unit_price: item.amount,
+            cost_price: item.amount* item.qty,
+            item_title: item.room_type,
+            qty: item.qty,
+            booking_id: item.booking_id,
+          };
+  
+          console.log("Order item:", orderItem);
+  
+          return api.post("/finance/insertorder_item", orderItem);
+        });
+  
+        // Execute all order item inserts, then update booking status
+        return Promise.all(orderItemPromises)
+          .then(() => {
+            const bookingStatus = { status: "Completed" ,booking_id:bookingId};
+            return api.post("/booking/edit-Booking_status", bookingStatus);
+          });
+      })
+      .then(() => {
+        getOrdersById(); // Fetch updated order data after completion
+      })
+      .catch((error) => {
+        console.error("Error inserting order:", error);
+        message("Network connection error.");
+      });
+  };
+  
   useEffect(() => {
     getCompanyById();
+    getServiceLinked()
   }, []);
   return (
     <>
@@ -73,7 +114,7 @@ const CreateFinance = ({ financeModal, setFinanceModal, projectId,getOrdersById 
                       <Input
                         type="text"
                         onChange={handleInserts}
-                        value={projectDetails && projectDetails.cust_company_name}
+                        value={OrdersDetails && OrdersDetails.cust_company_name}
                         name="cust_company_name"
                       />
                     </FormGroup>
@@ -84,7 +125,7 @@ const CreateFinance = ({ financeModal, setFinanceModal, projectId,getOrdersById 
                       <Input
                         type="text"
                         onChange={handleInserts}
-                        value={projectDetails && projectDetails.cust_address1}
+                        value={OrdersDetails && OrdersDetails.cust_address1}
                         name="cust_address1"
                       />
                     </FormGroup>
@@ -95,7 +136,7 @@ const CreateFinance = ({ financeModal, setFinanceModal, projectId,getOrdersById 
                       <Input
                         type="text"
                         onChange={handleInserts}
-                        value={projectDetails && projectDetails.cust_address2}
+                        value={OrdersDetails && OrdersDetails.cust_address2}
                         name="cust_address2"
                       />
                     </FormGroup>
@@ -106,7 +147,7 @@ const CreateFinance = ({ financeModal, setFinanceModal, projectId,getOrdersById 
                       <Input
                         type="text"
                         onChange={handleInserts}
-                        value={projectDetails && projectDetails.cust_address_country}
+                        value={OrdersDetails && OrdersDetails.cust_address_country}
                         name="cust_address_country"
                       />
                     </FormGroup>
@@ -117,7 +158,7 @@ const CreateFinance = ({ financeModal, setFinanceModal, projectId,getOrdersById 
                       <Input
                         type="text"
                         onChange={handleInserts}
-                        value={projectDetails && projectDetails.cust_address_po_code}
+                        value={OrdersDetails && OrdersDetails.cust_address_po_code}
                         name="cust_address_po_code"
                       />
                     </FormGroup>
@@ -128,7 +169,7 @@ const CreateFinance = ({ financeModal, setFinanceModal, projectId,getOrdersById 
                       <Input
                         type="date"
                         onChange={handleInserts}
-                        value={projectDetails && projectDetails.order_date}
+                        value={OrdersDetails && OrdersDetails.order_date}
                         name="order_date"
                       />
                     </FormGroup>
@@ -140,7 +181,7 @@ const CreateFinance = ({ financeModal, setFinanceModal, projectId,getOrdersById 
                         type="select"
                         name="record_type"
                         onChange={handleInserts}
-                        value={projectDetails && projectDetails.record_type}
+                        value={OrdersDetails && OrdersDetails.record_type}
                       >
                         <option value="">Select</option>
                         <option value="New">Project</option>
@@ -156,7 +197,7 @@ const CreateFinance = ({ financeModal, setFinanceModal, projectId,getOrdersById 
                       <Input
                         type="select"
                         name="order_status"
-                        defaultValue={projectDetails && projectDetails.status}
+                        defaultValue={OrdersDetails && OrdersDetails.status}
                         onChange={handleInserts}
                       >
                         <option value="">Please Select</option>

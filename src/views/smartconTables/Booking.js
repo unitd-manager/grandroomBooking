@@ -27,11 +27,11 @@ const Booking = () => {
       .then((res) => {
         setBookings(res.data.data);
         $('#example').DataTable({
-          pagingType: 'full_numbers',
-          pageLength: 20,
-          processing: true,
-          dom: 'Bfrtip',
-          // buttons: [
+          // pagingType: 'full_numbers',
+          // pageLength: 20,
+          // processing: true,
+          // dom: 'Bfrtip',
+          // // buttons: [
           //   {
           //     extend: 'print',
           //     text: 'Print',

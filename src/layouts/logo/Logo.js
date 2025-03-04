@@ -5,7 +5,7 @@ import React from 'react';
 // import { ReactComponent as LogoDarkText } from '../../assets/images/logos/xtreme-dark-text.svg';
 // import { ReactComponent as LogoWhiteIcon } from '../../assets/images/logos/xtreme-white-icon.svg';
 // import { ReactComponent as LogoWhiteText } from '../../assets/images/logos/xtreme-white-text.svg';
-import  MainLogo from '../../assets/images/logos/logo.png';
+import  MainLogo from '../../assets/images/logos/logo.jpg';
 
 const Logo = () => {
   // const isDarkMode = useSelector((state) => state.customizer.isDark);
@@ -13,7 +13,7 @@ const Logo = () => {
   // const activeSidebarBg = useSelector((state) => state.customizer.sidebarBg);
   return (
     <Link to="/" className="d-flex align-items-center gap-2">
-    <img src={MainLogo} alt="Logo" className='w-100' />
+    <img src={MainLogo} alt="Logo" className='w-100' style={{marginBottom:-69,marginTop:-34}} />
       {/* {isDarkMode || activeSidebarBg !== 'white' ? (
         <>
           <LogoWhiteIcon />

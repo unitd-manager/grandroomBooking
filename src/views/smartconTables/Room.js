@@ -27,10 +27,10 @@ const Room = () => {
       .then((res) => {
         setRoom(res.data.data);
         $('#example').DataTable({
-          pagingType: 'full_numbers',
-          pageLength: 20,
-          processing: true,
-          dom: 'Bfrtip',
+          // pagingType: 'full_numbers',
+          // pageLength: 20,
+          // processing: true,
+          // dom: 'Bfrtip',
           // buttons: [
           //   {
           //     extend: 'print',

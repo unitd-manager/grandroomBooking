@@ -28,12 +28,12 @@
 // export default AuthLogo;
 import { Link } from 'react-router-dom';
 import React from 'react';
-import  MainLogo from '../../assets/images/logos/logo.png';
+import  MainLogo from '../../assets/images/logos/logo.jpg';
 
 const AuthLogo = () => {
   return (
     <Link to="/" className="d-flex align-items-center gap-2">
-    <img src={MainLogo} alt="Logo" className='w-100' />
+    <img src={MainLogo} alt="Logo" className='w-100'style={{marginBottom:-100,marginTop:-34}} />
     </Link>
   );
 };

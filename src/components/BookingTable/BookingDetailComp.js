@@ -16,6 +16,14 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
 
  console.log('bookingDetails',bookingDetails)
 
+ const calculateDays = (startDate, endDate) => {
+  if (!startDate || !endDate) return 0;
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const difference = Math.ceil((end - start) / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+  return difference >= 0 ? difference : 0; // Ensure it's not negative
+};
+
 
   return (
     <>
@@ -52,6 +60,18 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                   />
                 </FormGroup>
               </Col>
+
+              <Col md="3">
+              <FormGroup>
+                <Label>Total Days</Label>
+                <Input
+                  type="text"
+                  value={calculateDays(bookingDetails?.booking_date, bookingDetails?.to_booking_date)}
+                  readOnly
+                />
+              </FormGroup>
+            </Col>
+
               <Col md="3">
                 <FormGroup>
                   <Label>Customer Name</Label>
@@ -75,7 +95,11 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                   </Input>
                 </FormGroup>
               </Col>
-              <Col md="3">
+            
+             
+                   </Row>
+            <Row>
+            <Col md="3">
                 <FormGroup>
                   <Label>Booking Status</Label>
                   <Input
@@ -91,9 +115,6 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                   </Input>
                 </FormGroup>
               </Col>
-             
-                   </Row>
-            <Row>
 
             {/* <Col md="3">
                 <FormGroup>
@@ -201,7 +222,7 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
               <Col md="3">
                 <FormGroup>
                   <Label>
-                    Amount
+                   Advance Amount
                   </Label>
                   <Input
                     type="text"

@@ -16,6 +16,7 @@ import ViewFileComponentV2 from '../ProjectModal/ViewFileComponentV2';
 import AddNote from '../Tender/AddNote';
 import ViewNote from '../Tender/ViewNote';
 import Tab from '../project/Tab';
+import FinanceTab from '../ProjectModal/FinanceTab';
 import BookingRoomLinked from './BookingRoomLinked';
 import BookingRoomEditModal from './BookingRoomEditModal'
 import api from '../../constants/api';
@@ -27,6 +28,8 @@ export default function BookingMoreDetails({
   setAttachmentModal,
   id,
   pictureData,
+  servicelinkeddetails,
+  bookingDetails,
 }) {
   BookingMoreDetails.propTypes = {
     dataForPicture: PropTypes.func,
@@ -34,6 +37,8 @@ export default function BookingMoreDetails({
     setAttachmentModal: PropTypes.func,
     id: PropTypes.any,
     pictureData: PropTypes.any,
+    servicelinkeddetails: PropTypes.any,
+    bookingDetails: PropTypes.any,
   };
 
   const [roomName, setRoomName] = useState('');
@@ -60,7 +65,7 @@ export default function BookingMoreDetails({
 
   const getContactLinked = () => {
     api
-      .post('/booking/getBookingHisrtoryById', { booking_id: id })
+      .post('/booking/getBookingServiceById', { booking_id: id })
       .then((res) => {
         setContactsDetails(res.data.data);
       })
@@ -93,15 +98,24 @@ export default function BookingMoreDetails({
   
         const newContactWithCompanyId = newContactData;
     newContactWithCompanyId.booking_id = id;
+    newContactWithCompanyId.is_available = "No";
     if (
       newContactWithCompanyId.room_type !== '' 
      
     
     ) {
+
+      api
+      .post('/booking/BookingHistoryRoomNumber', { room_number:newContactData && newContactData.room_number})
+      .then((res1) => {
+        newContactWithCompanyId.amount = res1.data.data[0].amount;
+        newContactWithCompanyId.qty = 1;
+        console.log('amount',res1.data.data)
     api
       .post('/booking/insertBookingHistory', newContactWithCompanyId)
       .then(() => {
         message('Room inserted successfully.', 'success');
+       
 
         api
         .post('/booking/BookingHistoryRoomNumber', { room_number:newContactData && newContactData.room_number})
@@ -121,10 +135,12 @@ export default function BookingMoreDetails({
       .catch(() => {
         message('Network connection error.', 'error');
       });
+    })
   }else {
     message('Please fill all required fields', 'warning');
   }
 };
+
 
   const handleAddNewContact = (e) => {
     setNewContactData({ ...newContactData, [e.target.name]: e.target.value });
@@ -133,7 +149,8 @@ export default function BookingMoreDetails({
     // Start for tab refresh navigation #Renuka 1-06-23
     const tabs =  [
     {id:'1',name:'Rooms Linked'},
-    {id:'2',name:'Attachment'},
+    {id:'2',name:'Invoice'},
+    {id:'3',name:'Attachment'},
     ];
     const toggle = (tab) => {
       setActiveTab(tab);
@@ -203,10 +220,10 @@ export default function BookingMoreDetails({
           handleAddNewContact={handleAddNewContact}
           AddNewContact={AddNewContact}
           bookingHistory={bookingHistory}
+          bookingDetails={bookingDetails}
         
          >
          </BookingRoomLinked>
-         </TabPane>
          <BookingRoomEditModal
               editContactEditModal={editContactEditModal}
               setEditContactEditModal={setEditContactEditModal}
@@ -214,8 +231,12 @@ export default function BookingMoreDetails({
               roomStatus={roomType}
               BookingroomStatus={BookingroomStatus}
             />
+         </TabPane>
+         <TabPane tabId="2">
 
-        <TabPane tabId="2">
+         <FinanceTab projectId={id} projectDetail={bookingHistory} servicelinkeddetails={servicelinkeddetails}></FinanceTab>
+         </TabPane>
+         <TabPane tabId="3">
           <ComponentCard title="Picture">
             <Row>
               <Col xs="12" md="3" className="mb-3">

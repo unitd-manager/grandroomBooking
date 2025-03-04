@@ -34,6 +34,8 @@ const ContactEditModal = ({
 
   const [contactinsert, setContactInsert] = useState(null);
 
+  console.log('contactinsert',contactinsert)
+
   const handleInputs = (e) => {
     setContactInsert({ ...contactinsert, [e.target.name]: e.target.value });
   };
@@ -114,12 +116,34 @@ const ContactEditModal = ({
             </Col>
             <Col md="6">
               <FormGroup>
+                <Label>Days</Label>
+                <Input
+                  type="text"
+                  onChange={handleInputs}
+                  value={contactinsert && contactinsert.qty}
+                  name="qty"
+                />
+              </FormGroup>
+            </Col>
+            <Col md="6">
+              <FormGroup>
                 <Label>No of Person</Label>
                 <Input
                   type="text"
                   onChange={handleInputs}
                   value={contactinsert && contactinsert.capacity}
                   name="capacity"
+                />
+              </FormGroup>
+            </Col>
+            <Col md="6">
+              <FormGroup>
+                <Label>Amount</Label>
+                <Input
+                  type="text"
+                  onChange={handleInputs}
+                  value={contactinsert && contactinsert.amount}
+                  name="amount"
                 />
               </FormGroup>
             </Col>

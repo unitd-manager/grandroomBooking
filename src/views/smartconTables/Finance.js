@@ -25,10 +25,10 @@ const Finance = () => {
       .then((res) => {
         setFinance(res.data.data);
         $('#example').DataTable({
-          pagingType: 'full_numbers',
-          pageLength: 20,
-          processing: true,
-          dom: 'Bfrtip',
+          // pagingType: 'full_numbers',
+          // pageLength: 20,
+          // processing: true,
+          // dom: 'Bfrtip',
           // buttons: [
           //   {
           //     extend: 'print',

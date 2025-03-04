@@ -52,6 +52,15 @@ const BookingDetails = () => {
       });
   };
 
+  
+  const calculateDays = (startDate, endDate) => {
+    if (!startDate || !endDate) return 0;
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const difference = Math.ceil((end - start) / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+    return difference >= 0 ? difference : 0; // Ensure it's not negative
+  };
+
   //Api for insertCompany
   // const insertCompany = () => {
   //   if (companyInsertData.company_name !== '' && companyInsertData.address_flat !== '') {
@@ -80,11 +89,13 @@ const BookingDetails = () => {
     api
       .post('/booking/getBookingValidationInsert', {
         booking_date: bookingDetails.booking_date,
+        to_booking_date: bookingDetails.to_booking_date,
         assign_time: bookingDetails.assign_time,
         to_assign_time: bookingDetails.to_assign_time,
         hall: bookingDetails.hall,
         booking_id:id,
-        contact_id:bookingDetails.contact_id
+        contact_id:bookingDetails.contact_id,
+        total_hour : calculateDays()
       })
       .then((res1) => {
         if (res1.data.msg === 'Booking already exists for this date, time, and hall') {
@@ -111,6 +122,8 @@ const BookingDetails = () => {
   useEffect(() => {
     getCompany();
   }, [id]);
+
+
 
   return (
     <div>
@@ -139,7 +152,7 @@ const BookingDetails = () => {
                   <Col md="4">
                 <FormGroup>
                   <Label>
-                   Booking Date <span className="required"> *</span>
+                From Booking Date <span className="required"> *</span>
                   </Label>
                   <Input
                     type="date"
@@ -153,6 +166,32 @@ const BookingDetails = () => {
               </Col>
               <Col md="4">
                 <FormGroup>
+                  <Label>
+                  To Booking Date <span className="required"> *</span>
+                  </Label>
+                  <Input
+                    type="date"
+                    onChange={handleBookingInputs}
+                    value={
+                      bookingDetails && bookingDetails.to_booking_date
+                    }
+                    name="to_booking_date"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="4">
+              <FormGroup>
+                <Label>Total Days</Label>
+                <Input
+                  type="text"
+                  onChange={handleBookingInputs}
+                  value={calculateDays(bookingDetails?.booking_date, bookingDetails?.to_booking_date)}
+                  readOnly
+                />
+              </FormGroup>
+            </Col>
+              {/* <Col md="4">
+                <FormGroup>
                   <Label>Court</Label>
                   <Input
                     value={bookingDetails && bookingDetails.hall}
@@ -165,7 +204,7 @@ const BookingDetails = () => {
                     <option value="Court 2">Court 2</option>
                   </Input>
                 </FormGroup>
-              </Col>
+              </Col> */}
                   <Col md="4">
                 <FormGroup>
                   <Label>From Assign Time</Label>

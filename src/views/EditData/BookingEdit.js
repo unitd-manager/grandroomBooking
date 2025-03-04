@@ -191,6 +191,7 @@ const BookingEdit = () => {
       <BookingMoreDetails
         servicelinkeddetails={servicelinkeddetails}
         activeTab={activeTab}
+        bookingDetails={bookingDetails}
         toggle={toggle}
         handleserviceInputs={handleserviceInputs}
         dataForPicture={dataForPicture}

@@ -136,17 +136,6 @@ export default function RoomHistoryInsert({
                           </Col>
                           <Col md="6">
                             <FormGroup>
-                              <Label>Room Status </Label>
-                              <Input
-                                type="text"
-                                onChange={handleAddNewContact}
-                                value={newContactData && newContactData.room_status}
-                                name="room_status"
-                              />
-                            </FormGroup>
-                          </Col>
-                          <Col md="6">
-                            <FormGroup>
                               <Label>
                                 Room Status <span className="required"> *</span>
                               </Label>

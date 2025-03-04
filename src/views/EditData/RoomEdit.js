@@ -152,6 +152,7 @@ const ContactEdit = () => {
     
           const newContactWithCompanyId = newContactData;
       newContactWithCompanyId.room_id = id;
+      newContactWithCompanyId.amount = roomDetails?.price_per_night ;
       if (
         newContactWithCompanyId.room_number !== '' 
        
@@ -176,6 +177,8 @@ const ContactEdit = () => {
       setNewContactData({ ...newContactData, [e.target.name]: e.target.value });
     };
   console.log('bookingHistory',bookingHistory)
+
+  
   //Logic for edit data in db
   const editRoomData = () => {
     roomDetails.modification_date = creationdatetime;
