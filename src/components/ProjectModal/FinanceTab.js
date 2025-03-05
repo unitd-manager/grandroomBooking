@@ -362,7 +362,7 @@ const placeOrder = () => {
           </Col>
         )}
         
-        {orderId || !invoiceId.invoice_id && (
+        {orderId && (
           <Col md="3">
         
               {' '}
@@ -370,7 +370,7 @@ const placeOrder = () => {
                 onClick={() => {
                   editOrderCancel();
                 }}>
-                Cancel Order
+                Update Order
               </Button>
          
           </Col>
