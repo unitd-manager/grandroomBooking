@@ -8,7 +8,7 @@ import InvoiceData from '../../components/Finance/InvoiceData';
 import InvoiceModal from '../../components/Finance/InvoiceModal';
 import ReceiptModal from '../../components/Finance/ReceiptModal';
 import CreateReceipt from '../../components/Finance/CreateReceipt';
-import CreateNote from '../../components/Finance/CreateNote';
+// import CreateNote from '../../components/Finance/CreateNote';
 import BreadCrumbs from '../../layouts/breadcrumbs/BreadCrumbs';
 import ComponentCard from '../../components/ComponentCard';
 import message from '../../components/Message';
@@ -16,7 +16,7 @@ import api from '../../constants/api';
 import CustomerDetail from '../../components/Finance/CustomerDetail';
 import FinanceInvoiceModal from '../../components/Finance/FinanceInvoiceModal';
 import CustomerFinanceReceipt from '../../components/Finance/CustomerFinanceReceipt';
-import CustomerFinanceCreditNote from '../../components/Finance/CustomerFinanceCreditNote';
+// import CustomerFinanceCreditNote from '../../components/Finance/CustomerFinanceCreditNote';
 import FinanceSummary from '../../components/Finance/FinanceSummary';
 //import FinanceButton from '../../components/Finance/FinanceButton';
 import FinanceDeliveryAddress from '../../components/Finance/FinanceDeliveryAddress';
@@ -30,7 +30,7 @@ const FinanceEdit = () => {
   const [editInvoiceData, setEditInvoiceData] = useState(false);
   const [activeTab, setActiveTab] = useState('1');
   const [editCreateReceipt, setEditCreateReceipt] = useState(false);
-  const [editCreateNote, setEditCreateNote] = useState(false);
+  // const [editCreateNote, setEditCreateNote] = useState(false);
   const [editInvoiceModal, setEditInvoiceModal] = useState(false);
   const [editReceiptModal, setEditReceiptModal] = useState(false);
   const [editReceiptDataModal, setReceiptDataModal] = useState(false);
@@ -40,7 +40,7 @@ const FinanceEdit = () => {
   const [cancelInvoice, setCancelInvoice] = useState(null);
   const [cancelReceipt, setCancelReceipt] = useState(null);
   const [receipt, setReceipt] = useState(null);
-  const [note, setNote] = useState([]);
+  // const [note, setNote] = useState([]);
   const [invoicesummary, setInvoiceSummary] = useState(null);
   const [receiptsummary, setReceiptSummary] = useState(null);
   const [invoiceitemsummary, setInvoiceItemSummary] = useState(null);
@@ -59,12 +59,12 @@ const FinanceEdit = () => {
   };
   // Start for tab refresh navigation #Renuka 1-06-23
   const tabs = [
-    { id: '1', name: 'Delivery Address' },
+    { id: '1', name: 'Address' },
     { id: '2', name: 'Customer Details' },
     { id: '3', name: 'Summary' },
     { id: '4', name: 'Invoice(s)' },
     { id: '5', name: 'Receipt(s)' },
-    { id: '6', name: 'CreditNote(s)' },
+    // { id: '6', name: 'CreditNote(s)' },
   ];
   const toggle = (tab) => {
     setActiveTab(tab);
@@ -141,16 +141,16 @@ console.log('ids',id)
   };
 
   //For getting Credit By Order Id
-  const getCreditById = () => {
-    api
-      .post('/invoice/getNoteById', { order_id: id })
-      .then((res) => {
-        setNote(res.data.data);
-      })
-      .catch(() => {
-        message('Cannot get Invoice Data', 'error');
-      });
-  };
+  // const getCreditById = () => {
+  //   api
+  //     .post('/invoice/getNoteById', { order_id: id })
+  //     .then((res) => {
+  //       setNote(res.data.data);
+  //     })
+  //     .catch(() => {
+  //       message('Cannot get Invoice Data', 'error');
+  //     });
+  // };
 
   //For getting Summary By Order Id
   const getInvoiceSummaryById = () => {
@@ -211,11 +211,84 @@ console.log('ids',id)
       });
   };
 
+  const [details ,setBookingServiceAmount] = useState ('')
+  const [bookingServicename ,setBookingServiceName] = useState ('')
+
+  const getServiceAmount = () => {
+    api
+      .post('/finance/getBookingOrderAmount', { order_id: id })
+      .then((res) => {
+        setBookingServiceAmount(res.data.data[0]);
+      })
+      .catch(() => {
+       
+      });
+  };
+
+  const getServiceLinked = () => {
+    api
+      .post('/finance/getBookingOrderItem', { order_id: id })
+      .then((res) => {
+        setBookingServiceName(res.data.data);
+      })
+      .catch(() => {
+       
+      });
+  };
+
+  const placeOrder = () => {
+    if (!details || !details.total_amount) {
+      console.error("Total amount is missing!");
+      return;
+    }
+  
+    // Ensure bookingService is an object before modifying
+    const updatedBookingService = { ...details, invoice_amount: details.total_amount,status: 'Due' };
+  
+    api
+      .post("/finance/insertInvoice", updatedBookingService)
+      .then((res) => {
+        if (!res.data.data.insertId) {
+          throw new Error("Invoice insertion failed!");
+        }
+        
+        const insertedId = res.data.data.insertId;
+  
+        const orderItemPromises = bookingServicename.map((item) => {
+          const orderItem = {
+            contact_id: item.contact_id,
+            invoice_id: insertedId,
+            unit_price: item.amount,
+            total_cost: item.amount* item.qty,
+            item_title: item.room_type,
+            qty: item.qty,
+            booking_id: item.booking_id,
+            status: 'Due'
+          };
+  
+          console.log("Order item:", orderItem);
+  
+          return api.post("/finance/insertInvoiceItem", orderItem);
+        });
+  
+        return Promise.all(orderItemPromises);
+      })
+      .then(() => {
+        window.location.reload();
+        console.log("All order items inserted successfully.");
+      })
+      .catch((err) => {
+        console.error("Error placing order:", err);
+      });
+  };
+
   useEffect(() => {
     getInvoiceById();
     getFinancesById();
     getReceiptById();
-    getCreditById();
+    // getCreditById();
+    getServiceAmount();
+    getServiceLinked();
     getInvoiceCancel();
     getReceiptCancel();
     getInvoiceSummaryById();
@@ -288,9 +361,9 @@ console.log('ids',id)
               setReceiptDataModal={setReceiptDataModal}
             ></CustomerFinanceReceipt>
           </TabPane>
-          <TabPane tabId="6">
+          {/* <TabPane tabId="6">
             <CustomerFinanceCreditNote note={note}></CustomerFinanceCreditNote>
-          </TabPane>
+          </TabPane> */}
 
           <ComponentCard title="Add More">
             <ToastContainer></ToastContainer>
@@ -310,7 +383,7 @@ console.log('ids',id)
               orderId={id}
             />
 
-            <CreateNote editCreateNote={editCreateNote} setEditCreateNote={setEditCreateNote} />
+            {/* <CreateNote editCreateNote={editCreateNote} setEditCreateNote={setEditCreateNote} /> */}
 
             <InvoiceModal
               editModal={editModal}
@@ -327,17 +400,20 @@ console.log('ids',id)
 
             {/* Invoice,Receipt and Note tab button */}
             <Row>
+
+              {!invoicesummary?.invoice_id &&
               <Col>
                 <Button
                   className="shadow-none"
                   color="primary"
                   onClick={() => {
-                    setEditInvoiceData(true);
+                    placeOrder();
                   }}
                 >
                   Create Invoice
                 </Button>
               </Col>
+              }
               <Col>
                 <Button
                   className="buttons"
@@ -349,7 +425,7 @@ console.log('ids',id)
                   Create Receipt
                 </Button>
               </Col>
-              <Col>
+              {/* <Col>
                 <Button
                   className="buttons"
                   color="primary"
@@ -359,7 +435,7 @@ console.log('ids',id)
                 >
                   Credit Notes
                 </Button>
-              </Col>
+              </Col> */}
             </Row>
           </ComponentCard>
         </TabContent>

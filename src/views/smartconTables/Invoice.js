@@ -63,12 +63,12 @@ const InvoiceData = () => {
       grow: 0,
       wrap: true,
     },
-    {
-      name: 'Project Name',
-      selector: 'project_title',
-      sortable: true,
-      grow: 0,
-    },
+    // {
+    //   name: 'Project Name',
+    //   selector: 'project_title',
+    //   sortable: true,
+    //   grow: 0,
+    // },
     {
       name: 'Client Name',
       selector: 'company_name',
@@ -96,13 +96,13 @@ const InvoiceData = () => {
       grow: 2,
       width: 'auto',
     },
-    {
-      name: 'Age',
-      selector: 'age',
-      sortable: true,
-      grow: 2,
-      wrap: true,
-    },
+    // {
+    //   name: 'Age',
+    //   selector: 'age',
+    //   sortable: true,
+    //   grow: 2,
+    //   wrap: true,
+    // },
     {
       name: 'Status',
       selector: 'status',
@@ -136,13 +136,13 @@ const InvoiceData = () => {
                   <tr key={element.invoice_id}>
                     <td>{index + 1}</td>
                     <td>{element.invoice_code}</td>
-                    <td>{element.project_title}</td>
-                    <td>{element.company_name}</td>
-                    <td>{moment(element.invoice_date).format('YYYY-MM-DD')}</td>
+                    {/* <td>{element.project_title}</td> */}
+                    <td>{element.contact_name}</td>
+                    <td>{element.invoice_date? moment(element.invoice_date).format('YYYY-MM-DD'):''}</td>
                     <td>{element.invoice_amount}</td>
-                    <td>{moment(element.invoice_due_date).format('YYYY-MM-DD')}</td>
-                    <td>{element.age}</td>
-                    <td>{element.status}</td>
+                    <td>{ element.invoice_due_date? moment(element.invoice_due_date).format('YYYY-MM-DD'):''}</td>
+                    {/* <td>{element.age}</td> */}
+                    <td>{element.invoiceStatus}</td>
                     <td>{element.invoice_type}</td>
                   </tr>
                 );

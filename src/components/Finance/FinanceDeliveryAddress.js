@@ -66,7 +66,7 @@ export default function FinanceDeliveryAddress({ financeDetails, handleInputs })
               />
             </FormGroup>
           </Col>
-          <Col md="3">
+          {/* <Col md="3">
             <FormGroup>
               <Label> Delivery Date</Label>
               <Input
@@ -76,12 +76,12 @@ export default function FinanceDeliveryAddress({ financeDetails, handleInputs })
                 name="delivery_date"
               />
             </FormGroup>
-          </Col>
+          </Col> */}
           <Col md="3">
             <FormGroup>
-              <Label>Delivery Terms </Label>
+              <Label>Terms </Label>
               <Input
-                type="text"
+                type="textarea"
                 onChange={handleInputs}
                 value={financeDetails && financeDetails.delivery_terms}
                 name="delivery_terms"

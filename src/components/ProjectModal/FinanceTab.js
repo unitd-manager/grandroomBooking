@@ -38,6 +38,7 @@ export default function FinanceTab({ projectDetail,servicelinkeddetails }) {
  const [OrdersDetails ,setOrdersDetails] = useState ('')
  const [totalAmount ,setBookingServiceAmount] = useState ('')
  const [bookingServicename ,setBookingServiceName] = useState ('')
+ const [invoiceId ,setinvoiceId] = useState ('')
 
  console.log('servicelinkeddetails',servicelinkeddetails)
 
@@ -47,6 +48,17 @@ export default function FinanceTab({ projectDetail,servicelinkeddetails }) {
       .post('/invoice/getBokingInvoiceById', { booking_id: id })
       .then((res) => {
         setCreateInvoice(res.data.data);
+      })
+      .catch(() => {
+       
+      });
+  };
+
+  const getInvoiceId = () => {
+    api
+      .post('/booking/getInvoiceId', { booking_id: id })
+      .then((res) => {
+        setinvoiceId(res.data.data);
       })
       .catch(() => {
        
@@ -301,6 +313,7 @@ const placeOrder = () => {
     getServiceLinked();
     getServiceAmount()
     getInvoiceById();
+    getInvoiceId();
     // getSupplierById();
     // getSubconById();
   }, []);
@@ -349,7 +362,7 @@ const placeOrder = () => {
           </Col>
         )}
         
-        {orderId && (
+        {orderId || !invoiceId.invoice_id && (
           <Col md="3">
         
               {' '}
@@ -419,7 +432,7 @@ const placeOrder = () => {
       )}
 
       <Row>
-      {orderId && (
+      {!orderId || !invoiceId.invoice_id && (
         <Col>
           <Button
             className="shadow-none"

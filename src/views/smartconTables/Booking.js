@@ -69,20 +69,24 @@ const Booking = () => {
       sortable: false,
     },
     {
-      name: 'Booking Date',
+      name: 'CustomerName',
+    },
+    {
+      name: 'From Booking Date',
+    },
+    {
+      name: 'To Booking Date',
     },
     {
       name: 'From AssignTime',
     },
-    {
-      name: 'To AssignTime',
-    },
+    // {
+    //   name: 'To AssignTime',
+    // },
     // {
     //   name: 'Total Hour',
     // },
-    {
-      name: 'CustomerName',
-    },
+  
     {
       name: 'Email',
     },
@@ -90,7 +94,7 @@ const Booking = () => {
       name: 'Mobile',
     },
     {
-      name: 'Court',
+      name: 'Status',
     },
   ];
 
@@ -127,14 +131,15 @@ const Booking = () => {
                         <Icon.Edit2 />
                       </Link>
                     </td>
-                    <td>{(element.booking_date)?moment(element.booking_date).format('DD-MM-YYYY'):''}</td>
-                    <td>{element.assign_time}</td>
-                    <td>{element.to_assign_time}</td>
-                    {/* <td>{element.total_hour}</td> */}
                     <td>{element.first_name}</td>
+                    <td>{(element.booking_date)?moment(element.booking_date).format('DD-MM-YYYY'):''}</td>
+                    <td>{(element.to_booking_date)?moment(element.to_booking_date).format('DD-MM-YYYY'):''}</td>
+                    <td>{element.assign_time}</td>
+                    {/* <td>{element.to_assign_time}</td> */}
+                    {/* <td>{element.total_hour}</td> */}
                     <td>{element.email}</td>
                     <td>{element.mobile}</td>
-                    <td>{element.hall}</td>
+                    <td>{element.status}</td>
                   </tr>
                 );
               })}

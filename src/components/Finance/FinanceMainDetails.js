@@ -27,7 +27,7 @@ export default function FinanceMainDetails({ financeDetails, handleInputs }) {
               </Col>
               <Col md="3">
                 <FormGroup>
-                  <Label>Project code </Label>
+                  <Label>Booking code </Label>
                   <br />
                   <td>
                     {' '}
@@ -37,13 +37,13 @@ export default function FinanceMainDetails({ financeDetails, handleInputs }) {
                   </td>
                 </FormGroup>
               </Col>
-              <Col md="3">
+              {/* <Col md="3">
                 <FormGroup>
                   <Label>Project Category </Label>
                   <br />
                   <span>{financeDetails && financeDetails.project_type}</span>
                 </FormGroup>
-              </Col>
+              </Col> */}
               <Col md="3">
                 <FormGroup>
                   <Label>Order Date</Label>
@@ -72,7 +72,7 @@ export default function FinanceMainDetails({ financeDetails, handleInputs }) {
                   <Label>Terms </Label>
                   <br />
                   <Input
-                    type="text"
+                    type="textarea"
                     onChange={handleInputs}
                     value={financeDetails && financeDetails.invoice_terms}
                     name="invoice_terms"
@@ -84,7 +84,7 @@ export default function FinanceMainDetails({ financeDetails, handleInputs }) {
                   <Label>Notes</Label>
                   <br />
                   <Input
-                    type="text"
+                    type="textarea"
                     onChange={handleInputs}
                     value={financeDetails && financeDetails.notes}
                     name="notes"

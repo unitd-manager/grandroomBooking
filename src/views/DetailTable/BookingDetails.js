@@ -8,6 +8,7 @@ import ComponentCard from '../../components/ComponentCard';
 import api from '../../constants/api';
 import message from '../../components/Message';
 import creationdatetime from '../../constants/creationdatetime';
+import TenderContactDetails from '../../components/TenderTable/TenderContactDetails';
 
 const BookingDetails = () => {
   //All state Variables
@@ -52,6 +53,48 @@ const BookingDetails = () => {
       });
   };
 
+  const [addContactModal, setAddContactModal] = useState(false);
+  const addContactToggle = () => {
+    setAddContactModal(!addContactModal);
+  };  
+
+  const [newContactData, setNewContactData] = useState({
+    salutation: '',
+    first_name: '',
+    email: '',
+    position: '',
+    department: '',
+    phone_direct: '',
+    fax: '',
+    mobile: '',
+  });
+
+  const handleAddNewContact = (e) => {
+    setNewContactData({ ...newContactData, [e.target.name]: e.target.value });
+  };
+
+  const AddNewContact = () => {
+    const newDataWithCompanyId = newContactData;
+    // newDataWithCompanyId.company_id = selectedCompany;
+    if (
+      newDataWithCompanyId.salutation !== '' &&
+      newDataWithCompanyId.first_name !== '' 
+    
+    ) {
+      api
+        .post('/tender/insertContact', newDataWithCompanyId)
+        .then(() => {
+          // getContact(newDataWithCompanyId.company_id);
+          message('Contact Inserted Successfully', 'success');
+          window.location.reload();
+        })
+        .catch(() => {
+          message('Unable to add Contact! try again later', 'error');
+        });
+    } else {
+      message('All fields are required.', 'info');
+    }
+  };
   
   const calculateDays = (startDate, endDate) => {
     if (!startDate || !endDate) return 0;
@@ -137,6 +180,14 @@ const BookingDetails = () => {
                 <Row>
                   <Col md="4">
                     <Label>CustomerName </Label>
+                    <Label>
+                    Customer Name (OR){' '}
+                    <span className="anchor" onClick={addContactToggle.bind(null)}>
+                      <b>
+                        <u>Add New</u>
+                      </b>
+                    </span>
+                  </Label>
                     <Input type="select" name="contact_id" onChange={handleBookingInputs}>
                       <option>Select Customer</option>
                       {company &&
@@ -147,6 +198,12 @@ const BookingDetails = () => {
                             </option>
                           );
                         })}
+                         <TenderContactDetails
+                      addContactModal={addContactModal}
+                      addContactToggle={addContactToggle}
+                      AddNewContact={AddNewContact}
+                      handleAddNewContact={handleAddNewContact}
+                    ></TenderContactDetails>
                     </Input>
                   </Col>
                   <Col md="4">

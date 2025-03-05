@@ -44,8 +44,10 @@ const BookingEdit = () => {
     navigate('/Booking');
   };
 
-
-      
+  const [addContactModal, setAddContactModal] = useState(false);
+  const addContactToggle = () => {
+    setAddContactModal(!addContactModal);
+  };  
 
   //Api call for getting contact dropdown
   const getContact = () => {
@@ -137,6 +139,46 @@ const BookingEdit = () => {
       });
   };
 
+
+  const [newContactData, setNewContactData] = useState({
+    salutation: '',
+    first_name: '',
+    email: '',
+    position: '',
+    department: '',
+    phone_direct: '',
+    fax: '',
+    mobile: '',
+  });
+
+  const handleAddNewContact = (e) => {
+    setNewContactData({ ...newContactData, [e.target.name]: e.target.value });
+  };
+
+  const AddNewContact = () => {
+    const newDataWithCompanyId = newContactData;
+    // newDataWithCompanyId.company_id = selectedCompany;
+    if (
+      newDataWithCompanyId.salutation !== '' &&
+      newDataWithCompanyId.first_name !== '' 
+    
+    ) {
+      api
+        .post('/tender/insertContact', newDataWithCompanyId)
+        .then(() => {
+          getContact(newDataWithCompanyId.company_id);
+          message('Contact Inserted Successfully', 'success');
+          window.location.reload();
+        })
+        .catch(() => {
+          message('Unable to add Contact! try again later', 'error');
+        });
+    } else {
+      message('All fields are required.', 'info');
+    }
+  };
+
+
   // Attachment
   const dataForPicture = () => {
     setDataForPicture({
@@ -180,6 +222,12 @@ const BookingEdit = () => {
           contact={contact}
           toggle={toggle}
           setEditCustomerModal={setEditCustomerModal}
+          addContactModal={addContactModal}
+          setAddContactModal={setAddContactModal}
+          addContactToggle={addContactToggle}
+          handleAddNewContact={handleAddNewContact}
+          newContactData={newContactData}
+          AddNewContact={AddNewContact}
         ></BookingDetailComp>
       </ComponentCard>
 

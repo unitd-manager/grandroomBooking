@@ -133,7 +133,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
     <>
       <Modal size="xl" isOpen={editModal}>
         <ModalHeader>
-          Create Invoice
+         Invoice deatails
           <Button
             className="shadow-none"
             color="secondary"
@@ -166,8 +166,8 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
                   <thead>
                     <tr>
                       <th scope="col">Item</th>
-                      <th scope="col">Description </th>
-                      <th scope="col">UoM</th>
+                      {/* <th scope="col">Description </th>
+                      <th scope="col">UoM</th> */}
                       <th scope="col">Qty</th>
                       <th scope="col">Unit Price</th>
                       <th scope="col">Total Price</th>
@@ -188,7 +188,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
                                 onChange={(e) => updateState(index, 'item_title', e)}
                               />
                             </td>
-                            <td data-label="Description">
+                            {/* <td data-label="Description">
                               <Input
                                 defaultValue={item.description}
                                 type="text"
@@ -204,7 +204,7 @@ const InvoiceModal = ({ editInvoiceModal, editModal, setEditModal,invoiceDatas }
                                 onChange={(e) => updateState(index, 'unit', e)}
                                 
                               />
-                            </td>
+                            </td> */}
                             <td data-label="Qty">
                               <Input
                                 defaultValue={item.qty}

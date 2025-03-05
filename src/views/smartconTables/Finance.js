@@ -88,13 +88,13 @@ const Finance = () => {
       width: 'auto',
       grow: 3,
     },
-    {
-      name: 'Project Type',
-      selector: 'project_type',
-      sortable: true,
-      grow: 2,
-      width: 'auto',
-    },
+    // {
+    //   name: 'Project Type',
+    //   selector: 'project_type',
+    //   sortable: true,
+    //   grow: 2,
+    //   width: 'auto',
+    // },
     {
       name: 'Amount',
       selector: 'orderamount',
@@ -138,7 +138,7 @@ const Finance = () => {
                     <td>{element.order_id}</td>
                     <td>{element.cust_company_name}</td>
                     <td>{element.order_date}</td>
-                    <td>{element.project_type}</td>
+                    {/* <td>{element.project_type}</td> */}
                     <td>{element.orderamount}</td>
                     <td>{element.order_status}</td>
                   </tr>

@@ -1,14 +1,22 @@
 import React from 'react';
 import { Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
 import PropTypes from 'prop-types';
+import TenderContactDetails from '../TenderTable/TenderContactDetails';
 // import { Link } from 'react-router-dom';
 // import moment from 'moment';
 
-export default function BookingDetailComp({ bookingDetails, handleInputs, contact }) {
+export default function BookingDetailComp({ bookingDetails, handleInputs, contact,addContactModal,addContactToggle,handleAddNewContact,AddNewContact }) {
   BookingDetailComp.propTypes = {
     bookingDetails: PropTypes.object,
     handleInputs: PropTypes.func,
     contact: PropTypes.array,
+    addContactModal: PropTypes.object,
+    addContactToggle: PropTypes.object,
+    handleAddNewContact: PropTypes.object,
+    // newContactData: PropTypes.object,
+    AddNewContact: PropTypes.object,
+    
+   
     // employee: PropTypes.array,
     // setEditCustomerModal: PropTypes.func,
    
@@ -74,7 +82,15 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
 
               <Col md="3">
                 <FormGroup>
-                  <Label>Customer Name</Label>
+                  {/* <Label>Customer Name</Label> */}
+                  <Label>
+                  Customer Name (OR){' '}
+                    <span className="anchor" onClick={addContactToggle.bind(null)}>
+                      <b>
+                        <u>Add New</u>
+                      </b>
+                    </span>
+                  </Label>
                   <Input
                     type="select"
                     onChange={handleInputs}
@@ -92,6 +108,12 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
 
                    
                       })}
+                       <TenderContactDetails
+                      addContactModal={addContactModal}
+                      addContactToggle={addContactToggle}
+                      AddNewContact={AddNewContact}
+                      handleAddNewContact={handleAddNewContact}
+                    ></TenderContactDetails>
                   </Input>
                 </FormGroup>
               </Col>
