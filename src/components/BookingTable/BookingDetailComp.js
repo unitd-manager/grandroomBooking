@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Form, FormGroup, Label, Input } from 'reactstrap';
 import PropTypes from 'prop-types';
 import TenderContactDetails from '../TenderTable/TenderContactDetails';
 // import { Link } from 'react-router-dom';
 // import moment from 'moment';
+import api from '../../constants/api';
 
 export default function BookingDetailComp({ bookingDetails, handleInputs, contact,addContactModal,addContactToggle,handleAddNewContact,AddNewContact }) {
   BookingDetailComp.propTypes = {
@@ -22,7 +23,27 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
    
   };
 
- console.log('bookingDetails',bookingDetails)
+  const [contactAddress, setContactAddress] = useState();
+
+  console.log('contactAddress',contactAddress)
+
+ 
+  const getContact = () => {
+    api
+      .post('/contact/getContactById',{contact_id:bookingDetails && bookingDetails.contact_id})
+      .then((res) => {
+        setContactAddress(res.data.data[0]);
+      })
+      .catch(() => {
+       
+      });
+  };
+
+  useEffect(() => {
+ 
+    getContact();
+  }, [bookingDetails && bookingDetails.contact_id]); 
+
 
  const calculateDays = (startDate, endDate) => {
   if (!startDate || !endDate) return 0;
@@ -41,7 +62,7 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
               <Col md="3">
                 <FormGroup>
                   <Label>
-                   Booking Date <span className="required"> *</span>
+                   From Date <span className="required"> *</span>
                   </Label>
                   <Input
                     type="date"
@@ -56,7 +77,7 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
               <Col md="3">
                 <FormGroup>
                   <Label>
-                  To Booking Date <span className="required"> *</span>
+                  To Date <span className="required"> *</span>
                   </Label>
                   <Input
                     type="date"
@@ -129,6 +150,7 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                     type="select"
                     onChange={handleInputs}
                     name="status"
+                    disabled
                   >
                     <option value="">Please Select</option>
                     <option value="Booked">Booked</option>
@@ -168,7 +190,7 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
               </Col> */}
               <Col md="3">
                 <FormGroup>
-                  <Label>From Assign Time</Label>
+                  <Label>Check In Time</Label>
                   <Input
                     value={bookingDetails && bookingDetails.assign_time}
                     type="select"
@@ -182,7 +204,7 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                     <option value="09:00 AM">09:00 AM</option>
                     <option value="10:00 AM">10:00 AM</option>
                     <option value="11:00 AM">11:00 AM</option>
-                    <option value="12:00 AM">12:00 AM</option>
+                    <option value="12:00 AM">12:00 PM</option>
                     <option value="01:00 PM">01:00 PM</option>
                     <option value="02:00 PM">02:00 PM</option>
                     <option value="03:00 PM">03:00 PM</option>
@@ -198,7 +220,7 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
               </Col>
               <Col md="3">
                 <FormGroup>
-                  <Label>To Assign Time</Label>
+                  <Label>Check Out Time</Label>
                   <Input
                     value={bookingDetails && bookingDetails.to_assign_time}
                     type="select"
@@ -212,7 +234,7 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                     <option value="09:00 AM">09:00 AM</option>
                     <option value="10:00 AM">10:00 AM</option>
                     <option value="11:00 AM">11:00 AM</option>
-                    <option value="12:00 AM">12:00 AM</option>
+                    <option value="12:00 AM">12:00 PM</option>
                     <option value="01:00 PM">01:00 PM</option>
                     <option value="02:00 PM">02:00 PM</option>
                     <option value="03:00 PM">03:00 PM</option>
@@ -251,6 +273,76 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                     onChange={handleInputs}
                     value={bookingDetails && bookingDetails.amount}
                     name="amount"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="3">
+                <FormGroup>
+                  <Label>
+                   Address
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputs}
+                    value={contactAddress && contactAddress.address_flat}
+                    name="address_flat"
+                    disabled
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="3">
+                <FormGroup>
+                  <Label>
+                   Address State
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputs}
+                    value={contactAddress && contactAddress.address_state}
+                    name="address_state"
+                    disabled
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="3">
+                <FormGroup>
+                  <Label>
+                   Address Street
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputs}
+                    value={contactAddress && contactAddress.address_street}
+                    name="address_street"
+                    disabled
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="3">
+                <FormGroup>
+                  <Label>
+                  Postal Code
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputs}
+                    value={contactAddress && contactAddress.address_po_code}
+                    name="address_po_code"
+                    disabled
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="3">
+                <FormGroup>
+                  <Label>
+                 Country
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputs}
+                    value={contactAddress && contactAddress.address_country}
+                    name="address_country"
+                    disabled
                   />
                 </FormGroup>
               </Col>

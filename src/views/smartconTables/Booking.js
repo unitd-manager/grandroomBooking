@@ -69,16 +69,16 @@ const Booking = () => {
       sortable: false,
     },
     {
-      name: 'CustomerName',
+      name: 'Customer Name',
     },
     {
-      name: 'From Booking Date',
+      name: 'From Date',
     },
     {
-      name: 'To Booking Date',
+      name: 'To Date',
     },
     {
-      name: 'From AssignTime',
+      name: 'Check in Time',
     },
     // {
     //   name: 'To AssignTime',

@@ -71,26 +71,8 @@ export default function TenderContactDetails({
                       </Col>
                       <Col md="4">
                         <FormGroup>
-                          <Label>Position</Label>
-                          <Input type="text" name="position" onChange={handleAddNewContact} />
-                        </FormGroup>
-                      </Col>
-                      <Col md="4">
-                        <FormGroup>
-                          <Label>Department</Label>
-                          <Input type="text" name="department" onChange={handleAddNewContact} />
-                        </FormGroup>
-                      </Col>
-                      <Col md="4">
-                        <FormGroup>
                           <Label>Phone (Direct)</Label>
                           <Input type="number" name="phone_direct" onChange={handleAddNewContact} />
-                        </FormGroup>
-                      </Col>
-                      <Col md="4">
-                        <FormGroup>
-                          <Label>Fax (Direct)</Label>
-                          <Input type="number" name="fax" onChange={handleAddNewContact} />
                         </FormGroup>
                       </Col>
                       <Col md="4">
@@ -99,6 +81,66 @@ export default function TenderContactDetails({
                           <Input type="number" name="mobile" onChange={handleAddNewContact} />
                         </FormGroup>
                       </Col>
+                      <Col md="4">
+                <FormGroup>
+                  <Label>
+                   Address
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleAddNewContact}
+                    name="address_flat"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="4">
+                <FormGroup>
+                  <Label>
+                   Address State
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleAddNewContact}
+                    name="address_state"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="4">
+                <FormGroup>
+                  <Label>
+                   Address Street
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleAddNewContact}
+                    name="address_street"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="4">
+                <FormGroup>
+                  <Label>
+                  Postal Code
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleAddNewContact}
+                    name="address_po_code"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="4">
+                <FormGroup>
+                  <Label>
+                 Country
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleAddNewContact}
+                    name="address_country"
+                  />
+                </FormGroup>
+              </Col>
                     </Row>
                   </Form>
                 </CardBody>

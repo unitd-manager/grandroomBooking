@@ -11,6 +11,7 @@ import CustomerFinanceReceipt from '../Finance/CustomerFinanceReceipt';
 import api from '../../constants/api';
 // import message from '../Message';
 import CreateFinance from '../Finance/CreateFinance';
+import '../../assets/css/Loader.css'
 
 export default function FinanceTab({ projectDetail,servicelinkeddetails }) {
   FinanceTab.propTypes = {
@@ -157,92 +158,140 @@ export default function FinanceTab({ projectDetail,servicelinkeddetails }) {
       });
   };
 
-  const editOrderCancel = async () => {
-    try {
-      const isConfirmed = window.confirm("Are you sure you want to cancel this order?");
+  // const editOrderItemUpdate = async () => {
+  //   try {
+  //     const isConfirmed = window.confirm("Are you sure you want to cancel this order?");
       
-      if (!isConfirmed) {
-        return; // Stop execution if the user cancels
-      }
+  //     if (!isConfirmed) {
+  //       return; // Stop execution if the user cancels
+  //     }
   
-      const res = await api.post('/booking/getOrdersbooking', { booking_id: id });
+  //     const res = await api.post('/booking/getOrdersbooking', { booking_id: id });
       
-      if (!res.data.data || res.data.data.length === 0) {
-        console.error("No room order data found");
-        alert("No room order data found");
-        return;
-      }
+  //     if (!res.data.data || res.data.data.length === 0) {
+  //       console.error("No room order data found");
+  //       alert("No room order data found");
+  //       return;
+  //     }
   
-      const statusInsert = {
-        order_id: orderId,
-        order_status: "cancel",
-      };
+  //     const statusInsert = {
+  //       order_id: orderId,
+  //       order_status: "cancel",
+  //     };
   
-      await api.post('/booking/editOrderStatus', statusInsert);
+  //     await api.post('/booking/editOrderStatus', statusInsert);
   
-      const serviceInsert = {
-        booking_id: id,
-        status: "Booked",
-      };
+  //     const serviceInsert = {
+  //       booking_id: id,
+  //       status: "Booked",
+  //     };
   
-      await api.post('/booking/edit-Booking_status', serviceInsert);
+  //     await api.post('/booking/edit-Booking_status', serviceInsert);
       
-      alert("Order has been canceled successfully.");
-      // window.location.reload();
-    } catch (error) {
-      console.error("Error updating booking:", error);
-      alert("Failed to update booking.");
-    }
-  };
+  //     alert("Order has been canceled successfully.");
+  //     // window.location.reload();
+  //   } catch (error) {
+  //     console.error("Error updating booking:", error);
+  //     alert("Failed to update booking.");
+  //   }
+  // };
+
+  // const editOrderItemUpdate = async () => {
+  //   try {
+  //     const isConfirmed = window.confirm("Are you sure you want to update this order?");
+  
+  //     if (!isConfirmed) {
+  //       return; // Stop execution if the user cancels
+  //     }
+  
+  //     const res = await api.post('/booking/getBookingServiceById', { booking_id: id });
+  
+  //     if (!res.data.data || res.data.data.length === 0) {
+  //       console.error("No room order data found");
+  //       alert("No room order data found");
+  //       return;
+  //     }
+  
+  //     // Create an array of promises
+  //     const orderItemPromises = res.data.data.map((item) => {
+  //       const orderItem = {
+  //         booking_service_id: item.booking_service_id,
+  //         order_id: item.order_id, 
+  //         unit_price: item.amount,
+  //         cost_price: item.amount * item.qty,
+  //         item_title: item.room_type,
+  //         qty: item.qty,
+         
+  //       };
+  
+  //       console.log("Updating order item:", orderItem);
+  
+  //       return api.post('/finance/editorderItem', orderItem);
+  //     });
+  
+  //     // Wait for all API calls to complete
+  //     await Promise.all(orderItemPromises);
+  
+  //     alert("Order has been updated successfully.");
+  //     window.location.reload();
+  //   } catch (error) {
+  //     console.error("Error updating booking:", error);
+  //     alert("Failed to update booking.");
+  //   }
+  // };
+  
   
 
 console.log('orderddddd',bookingService)
 
-const placeOrder = () => {
-  if (!totalAmount || !totalAmount.total_amount) {
-    console.error("Total amount is missing!");
-    return;
-  }
+// const placeOrder = () => {
+//   if (!totalAmount || !totalAmount.total_amount) {
+//     console.error("Total amount is missing!");
+//     return;
+//   }
 
-  // Ensure bookingService is an object before modifying
-  const updatedBookingService = { ...OrdersDetails, invoice_amount: totalAmount.total_amount,status: 'Due' };
+//   // Ensure bookingService is an object before modifying
+//   const updatedBookingService = { ...OrdersDetails, invoice_amount: totalAmount.total_amount,status: 'Due' };
 
-  api
-    .post("/finance/insertInvoice", updatedBookingService)
-    .then((res) => {
-      if (!res.data.data.insertId) {
-        throw new Error("Invoice insertion failed!");
-      }
+//   api
+//     .post("/finance/insertInvoice", updatedBookingService)
+//     .then((res) => {
+//       if (!res.data.data.insertId) {
+//         throw new Error("Invoice insertion failed!");
+//       }
       
-      const insertedId = res.data.data.insertId;
+//       const insertedId = res.data.data.insertId;
 
-      const orderItemPromises = bookingServicename.map((item) => {
-        const orderItem = {
-          contact_id: item.contact_id,
-          invoice_id: insertedId,
-          unit_price: item.amount,
-          total_cost: item.amount* item.qty,
-          item_title: item.room_type,
-          qty: item.qty,
-          booking_id: item.booking_id,
-          status: 'Due'
-        };
+//       const orderItemPromises = bookingServicename.map((item) => {
+//         const orderItem = {
+//           contact_id: item.contact_id,
+//           invoice_id: insertedId,
+//           unit_price: item.amount,
+//           total_cost: item.amount* item.qty,
+//           item_title: item.room_type,
+//           qty: item.qty,
+//           booking_id: item.booking_id,
+//           status: 'Due'
+//         };
 
-        console.log("Order item:", orderItem);
+//         console.log("Order item:", orderItem);
 
-        return api.post("/finance/insertInvoiceItem", orderItem);
-      });
+//         return api.post("/finance/insertInvoiceItem", orderItem);
+//       });
 
-      return Promise.all(orderItemPromises);
-    })
-    .then(() => {
-      window.location.reload();
-      console.log("All order items inserted successfully.");
-    })
-    .catch((err) => {
-      console.error("Error placing order:", err);
-    });
-};
+//       return Promise.all(orderItemPromises);
+     
+//     })
+//     .then(() => {
+//          const bookingStatus = { status: "Completed" ,booking_id:id};
+//             return api.post("/booking/edit-Booking_status", bookingStatus);
+//       window.location.reload();
+//       console.log("All order items inserted successfully.");
+//     })
+//     .catch((err) => {
+//       console.error("Error placing order:", err);
+//     });
+// };
 
   
 
@@ -279,6 +328,88 @@ const placeOrder = () => {
         
   //     });
   // };
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  const placeOrder = async () => {
+    try {
+
+      const isConfirmed = window.confirm("Are you sure you want to Create Invoice?");
+      
+          if (!isConfirmed) {
+            return; // Stop execution if the user cancels
+          }
+
+      if (!totalAmount || !totalAmount.total_amount) {
+        console.error("Total amount is missing!");
+        return;
+      }
+
+      setIsLoading(true);
+
+      const invoiceCodeResponse = await api.post('/commonApi/getCodeValue', { type: "invoice",});
+      const invoiceCode = invoiceCodeResponse.data.data;
+
+  
+      // Ensure OrdersDetails contains required data
+      const updatedBookingService = { 
+        ...OrdersDetails, 
+        invoice_amount: totalAmount.total_amount, 
+        status: 'Due' ,
+        invoice_code:invoiceCode
+      };
+  
+      // Insert invoice
+      const res = await api.post("/finance/insertInvoice", updatedBookingService);
+      
+      if (!res.data.data.insertId) {
+        throw new Error("Invoice insertion failed!");
+      }
+      
+      const insertedId = res.data.data.insertId;
+  
+      // Prepare order items for insertion
+      const orderItemPromises = bookingServicename.map((item) => {
+        const orderItem = {
+          contact_id: item.contact_id,
+          invoice_id: insertedId,
+          unit_price: item.amount,
+          total_cost: item.amount * item.qty,
+          item_title: item.room_type,
+          qty: item.qty,
+          booking_id: item.booking_id,
+          status: 'Due'
+        };
+  
+        console.log("Order item:", orderItem);
+  
+        return api.post("/finance/insertInvoiceItem", orderItem);
+      });
+  
+      // Wait for all order items to be inserted
+      await Promise.all(orderItemPromises);
+  
+      // Update booking status
+      const bookingStatus = { 
+        status: "Completed", 
+        booking_id: id
+      };
+  
+      await api.post("/booking/edit-Booking_status", bookingStatus);
+  
+      console.log("All order items inserted successfully.");
+      
+      // Reload page after everything is completed
+      window.location.reload();
+  
+    } catch (err) {
+      console.error("Error placing order:", err);
+    }
+    finally {
+      setIsLoading(false); // Hide loader after API call (success or failure)
+    }
+  };
+  
   const getReceiptById = () => {
     api
       .post('/invoice/getProjectReceiptById', { order_id:orderId })
@@ -320,6 +451,14 @@ const placeOrder = () => {
 
   return (
     <>
+    {isLoading && (
+  <div className="loader-overlay">
+    <div className="spinner"></div>
+    <p>Processing your Invoice...</p>
+  </div>
+)}
+
+
       <Row>
         <CardTitle tag="h4" className="border-bottom bg-secondary p-2 mb-0 text-white">
           {' '}
@@ -336,7 +475,7 @@ const placeOrder = () => {
         getOrdersById={getOrdersById}
       />
       <Row className="mb-4">
-        {!orderId && (
+        {/* {!orderId && (
           <Col md="3">
             {' '}
             <Button
@@ -349,7 +488,7 @@ const placeOrder = () => {
               Add Order
             </Button>
           </Col>
-        )}
+        )} */}
 
         {orderId && (
           <Col md="3">
@@ -362,19 +501,19 @@ const placeOrder = () => {
           </Col>
         )}
         
-        {orderId && (
+        {/* {orderId && (
           <Col md="3">
         
               {' '}
               <Button color="danger" className="shadow-none"
                 onClick={() => {
-                  editOrderCancel();
+                  editOrderItemUpdate();
                 }}>
                 Update Order
               </Button>
          
           </Col>
-            )}
+            )} */}
       </Row>
       <Row>
         <Col lg="12">
@@ -397,7 +536,7 @@ const placeOrder = () => {
             </thead>
             <tbody>
               <tr>
-                <td>Total Invoice Raised(Total PO Amount : ) </td>
+                <td>Total Invoice Raised </td>
                 <td>
                   {' '}
                   <span>{receiveble && receiveble.amount} </span>{' '}

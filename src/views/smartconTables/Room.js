@@ -69,14 +69,14 @@ const Room = () => {
       sortable: false,
     },
     {
-      name: ' room Type',
+      name: ' Room Type',
       selector: 'room_type',
       sortable: true,
       grow: 0,
       wrap: true,
     },
     {
-      name: 'No Of Members',
+      name: 'No Of Persons',
       selector: 'capacity',
       sortable: true,
       width: 'auto',

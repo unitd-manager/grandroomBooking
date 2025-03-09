@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   Row,
   Form,
@@ -31,6 +31,12 @@ export default function BookingRoomLinked({
   roomStatus,
   bookingHistory,
   bookingDetails,
+  orderId,
+  editOrderItemUpdate,
+  RoomVacate,
+  id,
+  getOrdersById,
+  contactAddress,
 }) {
   BookingRoomLinked.propTypes = {
     setContactData: PropTypes.func,
@@ -45,9 +51,17 @@ export default function BookingRoomLinked({
     roomStatus: PropTypes.func,
     bookingHistory: PropTypes.object,
     bookingDetails: PropTypes.object,
+    orderId: PropTypes.any,
+    editOrderItemUpdate: PropTypes.any,
+    RoomVacate: PropTypes.any,
+    id: PropTypes.any,
+    getOrdersById: PropTypes.func,
+    contactAddress: PropTypes.object,
   };
 
-  console.log("bookingDetails",bookingDetails?.status)
+
+  const [isLoading, setIsLoading] = useState(false);
+ 
   //  Table Contact
   const columns = [
     {
@@ -100,180 +114,303 @@ export default function BookingRoomLinked({
   ];
 
 
+  const [bookingServicename, setBookingServiceName] = useState();
 
-  console.log('contactsDetails',contactsDetails)
+  const getServiceLinked = () => {
+    api
+      .post('/booking/getBookingHisrtoryById', { booking_id: id })
+      .then((res) => {
+        setBookingServiceName(res.data.data);
+      })
+      .catch(() => {
+     
+      });
+  };
+
+console.log('contactAddress',contactAddress)
+  //Insert order for finance module
+  const insertOrder = () => {
+
+    const OrdersDetails ={
+    booking_id : id,
+    order_date: new Date().toLocaleDateString(),
+    shipping_address1:contactAddress.address_flat,
+    shipping_address_country:contactAddress.address_country,
+    shipping_address2:contactAddress.address_street,
+    shipping_address_state:contactAddress.address_state,
+    shipping_address_po_code:contactAddress.address_po_code,
+    cust_address1:contactAddress.address_flat,
+    cust_address2:contactAddress.address_street,
+    cust_address_state:contactAddress.address_state,
+    cust_address_po_code:contactAddress.address_po_code,
+    cust_address_country:contactAddress.address_country,
+    order_status:"Booking Confirm",
+    shipping_first_name:contactAddress.first_name,
+    cust_company_name:contactAddress.first_name,
+
+    }
+    setIsLoading(true);
   
+    api
+      .post("/finance/insertOrder", OrdersDetails)
+      .then((res) => {
+        const insertedId = res.data.data.insertId;
+  
+        // Create an array of promises for order items
+        const orderItemPromises = bookingServicename.map((item) => {
+          const orderItem = {
+            contact_id: item.contact_id, 
+            order_id: insertedId,
+            unit_price: item.amount,
+            cost_price: item.amount* item.qty,
+            item_title: item.room_type,
+            qty: item.qty,
+            booking_id: item.booking_id,
+            booking_service_id: item.booking_service_id,
+          };
+  
+          console.log("Order item:", orderItem);
+  
+          return api.post("/finance/insertorder_item", orderItem);
+        });
+  
+        // Execute all order item inserts, then update booking status
+        return Promise.all(orderItemPromises)
+          // .then(() => {
+          //   const bookingStatus = { status: "Completed" ,booking_id:id};
+          //   return api.post("/booking/edit-Booking_status", bookingStatus);
+          // });
+      })
+      .then(() => {
+        getOrdersById(); // Fetch updated order data after completion
+        setIsLoading(false);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error("Error inserting order:", error);
+     
+      });
+  };
+
   const editBookingData = async (roomNumber, serviceId) => {
     try {
       const res = await api.post('/booking/BookingHistoryRoomNumber', { room_number: roomNumber });
-      
+
       if (!res.data.data || res.data.data.length === 0) {
-        console.error("No room history data found");
-        alert("No room history data found");
+        console.error('No room history data found');
+        alert('No room history data found');
         return;
       }
-  
+
       const statusInsert = {
         room_history_id: res.data.data[0].room_history_id,
-        is_available: "No",
+        is_available: 'No',
       };
-  
+
       await api.post('/booking/edit-Rooms-History-Edit', statusInsert);
-  
+
       const serviceInsert = {
         booking_service_id: serviceId,
-        is_available: "No",
+        is_available: 'No',
       };
-  
+
       await api.post('/booking/edit-Booking-History_edit', serviceInsert);
-      
-      alert("Room Booked");
+
+      alert('Room Booked');
       window.location.reload();
     } catch (error) {
-      console.error("Error updating booking:", error);
-      alert("Failed to update booking.");
+      console.error('Error updating booking:', error);
+      alert('Failed to update booking.');
     }
   };
-  
+
   const editBookingCancel = async (roomNumber, serviceId) => {
     try {
       const res = await api.post('/booking/BookingHistoryRoomNumber', { room_number: roomNumber });
-  
+
       if (!res.data.data || res.data.data.length === 0) {
-        console.error("No room history data found");
-        alert("No room history data found");
+        console.error('No room history data found');
+        alert('No room history data found');
         return;
       }
-  
+
       const statusInsert = {
         room_history_id: res.data.data[0].room_history_id,
-        is_available: "Yes",
+        is_available: 'Yes',
       };
-  
+
       await api.post('/booking/edit-Rooms-History-Edit', statusInsert);
-  
+
       const serviceInsert = {
         booking_service_id: serviceId,
-        is_available: "Yes",
+        is_available: 'Yes',
       };
-  
+
       await api.post('/booking/edit-Booking-History_edit', serviceInsert);
-      
-      alert("Room Canceled");
+
+      alert('Room Canceled');
       window.location.reload();
     } catch (error) {
-      console.error("Error canceling booking:", error);
-      alert("Failed to cancel booking.");
+      console.error('Error canceling booking:', error);
+      alert('Failed to cancel booking.');
     }
   };
-  
 
+  useEffect(() => {
+    getServiceLinked()
+  }, []);
+  
 
   return (
     <Form>
+       {isLoading && (
+  <div className="loader-overlay">
+    <div className="spinner"></div>
+    <p>Processing Check in...</p>
+  </div>
+)}
       <Row>
-        <Col md="3">
-          <FormGroup>
+        {bookingDetails?.status !== 'Completed' ? (
+          <Col md="3">
+            <FormGroup>
+              <Button
+                color="primary"
+                className="shadow-none"
+                style={{ backgroundColor: 'green' }}
+                onClick={addContactToggle.bind(null)}
+              >
+                Add New{' '}
+              </Button>
+              <Modal size="lg" isOpen={addContactModal} toggle={addContactToggle.bind(null)}>
+                <ModalHeader toggle={addContactToggle.bind(null)}>New Booking</ModalHeader>
+                <ModalBody>
+                  <Row>
+                    <Col md="12">
+                      <CardBody>
+                        <Form>
+                          <Row>
+                            <Col md="6">
+                              <FormGroup>
+                                <Label>
+                                  Room Type<span className="required"> *</span>
+                                </Label>
+                                <Input
+                                  name="room_type"
+                                  value={newContactData && newContactData.room_type}
+                                  onChange={handleAddNewContact}
+                                  type="select"
+                                >
+                                  <option defaultValue="selected">Please Select</option>
+                                  {roomStatus &&
+                                    roomStatus.map((ele) => {
+                                      return (
+                                        <option key={ele.room_id} value={ele.room_type}>
+                                          {ele.room_type}
+                                        </option>
+                                      );
+                                    })}
+                                </Input>
+                              </FormGroup>
+                            </Col>
+                            <Col md="6">
+                              <FormGroup>
+                                <Label>
+                                  Room Number<span className="required"> *</span>
+                                </Label>
+                                <Input
+                                  name="room_number"
+                                  value={newContactData && newContactData.room_number}
+                                  onChange={handleAddNewContact}
+                                  type="select"
+                                >
+                                  <option defaultValue="selected">Please Select</option>
+                                  {bookingHistory &&
+                                    bookingHistory.map((ele) => {
+                                      return (
+                                        <option key={ele.room_id} value={ele.roomNumber}>
+                                          {ele.roomNumber}
+                                        </option>
+                                      );
+                                    })}
+                                </Input>
+                              </FormGroup>
+                            </Col>
+                            <Col md="6">
+                              <FormGroup>
+                                <Label>No of Person</Label>
+                                <Input
+                                  type="text"
+                                  onChange={handleAddNewContact}
+                                  value={newContactData && newContactData.capacity}
+                                  name="capacity"
+                                />
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                        </Form>
+                      </CardBody>
+                    </Col>
+                  </Row>
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    className="shadow-none"
+                    color="primary"
+                    onClick={() => {
+                      AddNewContact();
+                      //addContactModal(false);
+                    }}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    color="secondary"
+                    className="shadow-none"
+                    onClick={addContactToggle.bind(null)}
+                  >
+                    Cancel
+                  </Button>
+                </ModalFooter>
+              </Modal>
+            </FormGroup>
+          </Col>
+        ) : (
+          <span></span>
+        )}
+
+          {!orderId && (
+          <Col md="3">
+            {' '}
             <Button
               color="primary"
               className="shadow-none"
-              style={{ backgroundColor: 'green' }}
-              onClick={addContactToggle.bind(null)}
+              onClick={() => {
+                insertOrder();
+              }}
             >
-              Add New{' '}
+              Check In
             </Button>
-            <Modal size="lg" isOpen={addContactModal} toggle={addContactToggle.bind(null)}>
-              <ModalHeader toggle={addContactToggle.bind(null)}>New Contact</ModalHeader>
-              <ModalBody>
-                <Row>
-                  <Col md="12">
-                    <CardBody>
-                      <Form>
-                        <Row>
-                          <Col md="6">
-                            <FormGroup>
-                              <Label>
-                                Room Type<span className="required"> *</span>
-                              </Label>
-                              <Input
-                                name="room_type"
-                                value={newContactData && newContactData.room_type}
-                                onChange={handleAddNewContact}
-                                type="select"
-                              >
-                                <option defaultValue="selected">Please Select</option>
-                                {roomStatus &&
-                                  roomStatus.map((ele) => {
-                                    return (
-                                      <option key={ele.room_id} value={ele.room_type}>
-                                        {ele.room_type}
-                                      </option>
-                                    );
-                                  })}
-                              </Input>
-                            </FormGroup>
-                          </Col>
-                          <Col md="6">
-                            <FormGroup>
-                              <Label>
-                                Room Number<span className="required"> *</span>
-                              </Label>
-                              <Input
-                                name="room_number"
-                                value={newContactData && newContactData.room_number}
-                                onChange={handleAddNewContact}
-                                type="select"
-                              >
-                                <option defaultValue="selected">Please Select</option>
-                                {bookingHistory &&
-                                  bookingHistory.map((ele) => {
-                                    return (
-                                      <option key={ele.room_id} value={ele.roomNumber}>
-                                        {ele.roomNumber}
-                                      </option>
-                                    );
-                                  })}
-                              </Input>
-                            </FormGroup>
-                          </Col>
-                          <Col md="6">
-                            <FormGroup>
-                              <Label>No of Person</Label>
-                              <Input
-                                type="text"
-                                onChange={handleAddNewContact}
-                                value={newContactData && newContactData.capacity}
-                                name="capacity"
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                      </Form>
-                    </CardBody>
-                  </Col>
-                </Row>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  className="shadow-none"
-                  color="primary"
-                  onClick={() => {
-                    AddNewContact();
-                    //addContactModal(false);
-                  }}
-                >
-                  Submit
-                </Button>
-                <Button
-                  color="secondary"
-                  className="shadow-none"
-                  onClick={addContactToggle.bind(null)}
-                >
-                  Cancel
-                </Button>
-              </ModalFooter>
-            </Modal>
-          </FormGroup>
+          </Col>
+        )}
+
+        <Col md="3">
+          <Button
+            color="danger"
+            className="shadow-none"
+            onClick={editOrderItemUpdate} // Direct function reference
+          >
+            Update Order
+          </Button>
+        </Col>
+
+        <Col md="3">
+          <Button
+            color="danger"
+            className="shadow-none"
+            onClick={RoomVacate} // Direct function reference
+          >
+            Check Out
+          </Button>
         </Col>
       </Row>
       <Row>
@@ -286,74 +423,71 @@ export default function BookingRoomLinked({
             </tr>
           </thead>
           <tbody>
-  {contactsDetails &&
-    contactsDetails.map((element, i) => {
-      return (
-        <tr key={element.booking_service_id}>
-          <td>{i + 1}</td>
-          {bookingDetails?.status !== "Completed" ? (
-          <td>
-            <div className="anchor">
-              <span
-                onClick={() => {
-                  setContactData(element);
-                  setEditContactEditModal(true);
-                }}
-              >
-                <Icon.Edit2 />
-              </span>
-            </div>
-          </td>
-         ) : (
-          <td>    
-            <text>Not Edit</text>
-            </td>
-          ) 
-    }
-          {/* <td>
+            {contactsDetails &&
+              contactsDetails.map((element, i) => {
+                return (
+                  <tr key={element.booking_service_id}>
+                    <td>{i + 1}</td>
+                    {bookingDetails?.status !== 'Completed' ? (
+                      <td>
+                        <div className="anchor">
+                          <span
+                            onClick={() => {
+                              setContactData(element);
+                              setEditContactEditModal(true);
+                            }}
+                          >
+                            <Icon.Edit2 />
+                          </span>
+                        </div>
+                      </td>
+                    ) : (
+                      <td>
+                        <text>Not Edit</text>
+                      </td>
+                    )}
+                    {/* <td>
             <div color="primary" className="anchor">
               <span onClick={() => deleteRecord(element.booking_service_id)}>
                 <Icon.Trash2 />
               </span>
             </div>
           </td> */}
-          <td>{element.room_type}</td>
-          <td>{element.room_number}</td>
-          <td>{element.capacity}</td>
-          {bookingDetails?.status === "Completed" ? (
-    <td>    
-    <text>Booking Completed</text>
-    </td>
-) : element && String(element.is_available).toLowerCase() === "yes" ? (
-  <td>
-    <Button
-      onClick={() => {
-        editBookingData(element.room_number, element.booking_service_id);
-        console.log("element", element);
-      }}
-    >
-      Confirm Room
-    </Button>
-  </td>
-) : (
-  <td>
-    <Button
-      onClick={() => {
-        editBookingCancel(element.room_number, element.booking_service_id);
-        console.log("element", element);
-      }}
-      style={{ backgroundColor: "#f54e5f" }}
-    >
-      Cancel Room
-    </Button>
-  </td>
-)}
-
-        </tr>
-      );
-    })}
-</tbody>
-
+                    <td>{element.room_type}</td>
+                    <td>{element.room_number}</td>
+                    <td>{element.capacity}</td>
+                    {bookingDetails?.status === 'Completed' ? (
+                      <td>
+                        <text>Booking Completed</text>
+                      </td>
+                    ) : element && String(element.is_available).toLowerCase() === 'yes' ? (
+                      <td>
+                        <Button
+                          onClick={() => {
+                            editBookingData(element.room_number, element.booking_service_id);
+                            console.log('element', element);
+                          }}
+                        >
+                          Confirm Room
+                        </Button>
+                      </td>
+                    ) : (
+                      <td>
+                        <Button
+                          onClick={() => {
+                            editBookingCancel(element.room_number, element.booking_service_id);
+                            console.log('element', element);
+                          }}
+                          style={{ backgroundColor: '#f54e5f' }}
+                        >
+                          Cancel Room
+                        </Button>
+                      </td>
+                    )}
+                  </tr>
+                );
+              })}
+          </tbody>
         </Table>
       </Row>
     </Form>

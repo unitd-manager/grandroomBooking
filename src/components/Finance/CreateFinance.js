@@ -72,6 +72,7 @@ console.log('bookingServicename',bookingServicename)
             item_title: item.room_type,
             qty: item.qty,
             booking_id: item.booking_id,
+            booking_service_id: item.booking_service_id,
           };
   
           console.log("Order item:", orderItem);
@@ -81,13 +82,14 @@ console.log('bookingServicename',bookingServicename)
   
         // Execute all order item inserts, then update booking status
         return Promise.all(orderItemPromises)
-          .then(() => {
-            const bookingStatus = { status: "Completed" ,booking_id:bookingId};
-            return api.post("/booking/edit-Booking_status", bookingStatus);
-          });
+          // .then(() => {
+          //   const bookingStatus = { status: "Completed" ,booking_id:bookingId};
+          //   return api.post("/booking/edit-Booking_status", bookingStatus);
+          // });
       })
       .then(() => {
         getOrdersById(); // Fetch updated order data after completion
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Error inserting order:", error);

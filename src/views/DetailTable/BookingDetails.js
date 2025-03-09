@@ -209,7 +209,7 @@ const BookingDetails = () => {
                   <Col md="4">
                 <FormGroup>
                   <Label>
-                From Booking Date <span className="required"> *</span>
+                From Date <span className="required"> *</span>
                   </Label>
                   <Input
                     type="date"
@@ -224,7 +224,7 @@ const BookingDetails = () => {
               <Col md="4">
                 <FormGroup>
                   <Label>
-                  To Booking Date <span className="required"> *</span>
+                  To Date <span className="required"> *</span>
                   </Label>
                   <Input
                     type="date"
@@ -264,7 +264,7 @@ const BookingDetails = () => {
               </Col> */}
                   <Col md="4">
                 <FormGroup>
-                  <Label>From Assign Time</Label>
+                  <Label>Check In Time</Label>
                   <Input
                     value={bookingDetails && bookingDetails.assign_time}
                     type="select"
@@ -294,7 +294,7 @@ const BookingDetails = () => {
               </Col>
               <Col md="4">
                 <FormGroup>
-                  <Label>To Assign Time</Label>
+                  <Label>Check Out Time</Label>
                   <Input
                     value={bookingDetails && bookingDetails.to_assign_time}
                     type="select"

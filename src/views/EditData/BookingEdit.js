@@ -144,11 +144,13 @@ const BookingEdit = () => {
     salutation: '',
     first_name: '',
     email: '',
-    position: '',
-    department: '',
     phone_direct: '',
-    fax: '',
     mobile: '',
+    address_flat: '',
+    address_state: '',
+    address_street: '',
+    address_po_code: '',
+    address_country: '',
   });
 
   const handleAddNewContact = (e) => {
@@ -164,7 +166,7 @@ const BookingEdit = () => {
     
     ) {
       api
-        .post('/tender/insertContact', newDataWithCompanyId)
+        .post('/contact/insertContact', newDataWithCompanyId)
         .then(() => {
           getContact(newDataWithCompanyId.company_id);
           message('Contact Inserted Successfully', 'success');
@@ -177,6 +179,27 @@ const BookingEdit = () => {
       message('All fields are required.', 'info');
     }
   };
+
+  const [contactAddress, setContactAddress] = useState();
+
+  console.log('contactAddress',contactAddress)
+
+ 
+  const getContactbyid = () => {
+    api
+      .post('/contact/getContactById',{contact_id:bookingDetails && bookingDetails.contact_id})
+      .then((res) => {
+        setContactAddress(res.data.data[0]);
+      })
+      .catch(() => {
+       
+      });
+  };
+
+  useEffect(() => {
+ 
+    getContactbyid();
+  }, [bookingDetails && bookingDetails.contact_id]); 
 
 
   // Attachment
@@ -247,6 +270,7 @@ const BookingEdit = () => {
         attachmentModal={attachmentModal}
         id={id}
         setAttachmentModal={setAttachmentModal}
+        contactAddress={contactAddress}
       ></BookingMoreDetails>
 
 

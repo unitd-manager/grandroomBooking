@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'reactstrap';
 import { Page, Text, Document, Font, View, PDFDownloadLink, StyleSheet } from '@react-pdf/renderer';
+import moment from 'moment';
 import api from '../../constants/api';
 import message from '../Message';
+
 
 
 
@@ -46,7 +48,7 @@ const PdfCreateInvoice = ({ invoiceId }) => {
           grandTotal += elem.amount;
         });
         setGtotal(grandTotal);
-        gst = grandTotal * 0.07;
+        gst = grandTotal * 0.12;
         setGsttotal(gst);
         setTotal(grandTotal + gst);
       })
@@ -107,9 +109,9 @@ const MyPdfDocument = ({ createInvoice, invoiceItems, gTotal, gstTotal, Total })
     },
    
     Label: {
-      fontFamily: 'ArabicFont-Regular',
+      // fontFamily: 'ArabicFont-Regular',
+      marginRight:"20px",
       fontSize: 12,
-      marginLeft:'75%',
       marginBottom:5,
       flex: 3,
     },
@@ -212,19 +214,17 @@ const MyPdfDocument = ({ createInvoice, invoiceItems, gTotal, gstTotal, Total })
   const productItems = [
     [
       { text: 'Sn',  },
-      { text: 'Description                                                                                                            وصف', },
-      { text: 'Uom           أوم', },
-      { text: 'Qty          كمية', },
-      { text: 'Price                             سعر',  },
-      { text: 'Total Amount         المبلغ الإجمالي', },
+      { text: 'Room', }, 
+      { text: 'Days' },
+      { text: 'Price'},
+      { text: 'Total Amount' },
     ],
     ...invoiceItems.map((element, index) => [
       { text: `${index + 1}`,border: [false, false, false, true],width:'10%'},
-      { text: `${element.description ? element.description : ''}`, border: [false, false, false, true],width:'40%'},
-      { text: `${element.unit ? element.unit : ''}`, border: [false, false, false, true],width:'10%' },
-      { text: `${element.qty ? element.qty : ''}`, border: [false, false, false, true],width:'10%'  },
-      { text: `${element.unit_price.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, border: [false, false, false, true], width: '10%' },
-       { text: `${element.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, border: [false, false, false, true],width:'10%' },
+      { text: `${element.item_title ? element.item_title : ''}`, border: [false, false, false, true],width:'45%'},
+      { text: `${element.qty ? element.qty : ''}`, border: [false, false, false, true],width:'15%'  },
+      { text: `${element.unit_price.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, border: [false, false, false, true], width: '15%' },
+       { text: `${element.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, border: [false, false, false, true],width:'15%' },
     ]),
   ];
 
@@ -239,7 +239,7 @@ const MyPdfDocument = ({ createInvoice, invoiceItems, gTotal, gstTotal, Total })
         <View style={styles.addressContainer}>
           {/* Left-aligned section */}
           <View style={styles.addressSection}>
-            <Text style={styles.Addresss}>Company Address</Text>
+            <Text style={styles.Addresss}>{createInvoice.cust_company_name}</Text>
             <Text style={styles.Addresss}>{createInvoice.cust_address1}</Text>
             <Text style={styles.Addresss}>{createInvoice.cust_address2}</Text>
             <Text style={styles.Addresss}>{createInvoice.cust_address_country}</Text>
@@ -248,32 +248,11 @@ const MyPdfDocument = ({ createInvoice, invoiceItems, gTotal, gstTotal, Total })
 
           {/* Right-aligned section */}
           <View style={styles.addressSection}>
-            <Text style={styles.LabelValue}>Invoice No:</Text>
-            <Text style={styles.Label}>{createInvoice.invoice_code}</Text>
-            <Text style={styles.LabelValue}>Date :</Text>
-            <Text  style={styles.Label}>{createInvoice.invoice_date}</Text>
-            <Text  style={styles.LabelValue} >Code :</Text>
-            <Text  style={styles.Label}>{createInvoice.code}</Text>
-            <Text  style={styles.LabelValue} >SO Ref Number :</Text>
-            <Text style={styles.Label}>{createInvoice.so_ref_no}</Text>
-            <Text  style={styles.LabelValue}>PO Number :</Text>
-            <Text  style={styles.Label}>{createInvoice.po_number}</Text>
+            <Text style={styles.LabelValue}>Invoice No: {createInvoice.invoice_code} </Text>
+            <Text style={styles.LabelValue}> Invoice Date : {createInvoice.invoice_date ?moment(createInvoice.invoice_date).format('DD/MM/YYYY'):''}</Text>
           </View>
         </View>
-        <View >
-            <Text style={styles.LabelValue1}>ATTN:</Text>
-            <Text style={styles.LabelValue1}>Dear Sir,</Text>
-            <Text style={styles.LabelValue1}>Site Name :{createInvoice.title}</Text>
-            {/* <Text style={styles.Label1}>{createInvoice.title}</Text> */}
-            <Text style={styles.LabelValue1}>Site Code :{createInvoice.site_code} </Text>
-            {/* <Text  style={styles.Label1}>{createInvoice.site_code}</Text> */}
-            <Text  style={styles.LabelValue1} >Reference :{createInvoice.reference}</Text>
-            {/* <Text  style={styles.Label1}>{createInvoice.reference}</Text> */}
-            <Text  style={styles.LabelValue1} >Project Reference :{createInvoice.project_reference}</Text>
-            {/* <Text style={styles.Label1}>{createInvoice.project_reference}</Text> */}
-            <Text  style={styles.LabelValue1}>Project Location : {createInvoice.project_location}</Text>
-            {/* <Text  style={styles.Label1}>{createInvoice.project_location}</Text> */}
-          </View>
+      
           
           <View style={styles.table}>
   {/* Render the header row with the new tableHeaderCell style */}
@@ -286,11 +265,11 @@ const MyPdfDocument = ({ createInvoice, invoiceItems, gTotal, gstTotal, Total })
           {
             width:
               cellIndex === 0 ? '5%' :
-              cellIndex === 1 ? '40%' :
-              cellIndex === 2 ? '10%' :
-              cellIndex === 3 ? '10%' :
-              cellIndex === 4 ? '15%' :
-              cellIndex === 5 ? '20%' :
+              cellIndex === 1 ? '45%' :
+              // cellIndex === 2 ? '10%' :
+              cellIndex === 2 ? '15%' :
+              cellIndex === 3 ? '15%' :
+              cellIndex === 4 ? '20%' :
               'auto', // Default width for cells beyond index 5
           },
         ]}
@@ -317,11 +296,11 @@ const MyPdfDocument = ({ createInvoice, invoiceItems, gTotal, gstTotal, Total })
             {
               width:
                 cellIndex === 0 ? '5%' :
-                cellIndex === 1 ? '40%' :
-                cellIndex === 2 ? '10%' :
-                cellIndex === 3 ? '10%' :
-                cellIndex === 4 ? '15%' :
-                cellIndex === 5 ? '20%' :
+                cellIndex === 1 ? '45%' :
+                // cellIndex === 2 ? '10%' :
+                cellIndex === 2 ? '15%' :
+                cellIndex === 3 ? '15%' :
+                cellIndex === 4 ? '20%' :
                 'auto', // Default width for cells beyond index 5
             },
           ]}
@@ -362,6 +341,7 @@ PdfCreateInvoice.propTypes = {
 
 MyPdfDocument.propTypes = {
   createInvoice: PropTypes.shape({
+    cust_company_name: PropTypes.string.isRequired,
     cust_address1: PropTypes.string.isRequired,
     cust_address2: PropTypes.string.isRequired,
     cust_address_country: PropTypes.string.isRequired,
@@ -393,5 +373,6 @@ MyPdfDocument.propTypes = {
   gstTotal: PropTypes.number.isRequired,
   Total: PropTypes.number.isRequired,
 };
+
 
 export default PdfCreateInvoice;

@@ -21,6 +21,8 @@ import BookingRoomLinked from './BookingRoomLinked';
 import BookingRoomEditModal from './BookingRoomEditModal'
 import api from '../../constants/api';
 import message from '../Message';
+import '../../assets/css/Loader.css'
+
 
 export default function BookingMoreDetails({
   dataForPicture,
@@ -30,6 +32,7 @@ export default function BookingMoreDetails({
   pictureData,
   servicelinkeddetails,
   bookingDetails,
+  contactAddress,
 }) {
   BookingMoreDetails.propTypes = {
     dataForPicture: PropTypes.func,
@@ -39,6 +42,7 @@ export default function BookingMoreDetails({
     pictureData: PropTypes.any,
     servicelinkeddetails: PropTypes.any,
     bookingDetails: PropTypes.any,
+    contactAddress: PropTypes.any,
   };
 
   const [roomName, setRoomName] = useState('');
@@ -51,6 +55,21 @@ export default function BookingMoreDetails({
   const [contactData, setContactData] = useState();
   const [bookingHistory, setBookingHistory] = useState();
   const [BookingroomStatus, setBookingroomStatus] = useState();
+  const [orderId, setOrderId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingout, setIsLoadingout] = useState(false);
+
+
+  const getOrdersById = () => {
+    api
+      .post('/booking/getOrdersbooking',{ booking_id: id })
+      .then((res) => {
+        setOrderId(res.data.data[0].order_id);
+      })
+      .catch(() => {
+        
+      });
+  };
 
   const getRoomType = () => {
     api
@@ -128,7 +147,7 @@ export default function BookingMoreDetails({
         .post('/booking/edit-Rooms-History-Edit', statusinsert)
         .then(() => {
           message('Record editted successfully', 'success');
-          // window.location.reload();
+          window.location.reload();
         })
       })
       })
@@ -181,6 +200,100 @@ export default function BookingMoreDetails({
       });
     };
 
+    const editOrderItemUpdate = async () => {
+      try {
+        const isConfirmed = window.confirm("Are you sure you want to update this Booking?");
+    
+        if (!isConfirmed) {
+          return; // Stop execution if the user cancels
+        }
+        setIsLoading(true);
+        const res = await api.post('/booking/getBookingServiceById', { booking_id: id });
+    
+        if (!res.data.data || res.data.data.length === 0) {
+          console.error("No room order data found");
+          alert("No room order data found");
+          return;
+        }
+    
+        // Create an array of promises
+        const orderItemPromises = res.data.data.map((item) => {
+          const orderItem = {
+            booking_service_id: item.booking_service_id,
+            order_id: item.order_id, 
+            unit_price: item.amount,
+            cost_price: item.amount * item.qty,
+            item_title: item.room_type,
+            qty: item.qty,
+           
+          };
+    
+          console.log("Updating order item:", orderItem);
+    
+          return api.post('/finance/editorderItem', orderItem);
+        });
+    
+        // Wait for all API calls to complete
+        await Promise.all(orderItemPromises);
+    
+        alert("Order has been updated successfully.");
+        window.location.reload();
+      } catch (error) {
+        console.error("Error updating booking:", error);
+        alert("Failed to update booking.");
+      }
+      finally {
+        setIsLoading(false); // Hide loader after API call (success or failure)
+      }
+    };
+
+    const RoomVacate = async () => {
+      try {
+        const isConfirmed = window.confirm("Are you sure you want to Check Out?");
+        if (!isConfirmed) return; // Stop execution if user cancels
+    
+        setIsLoadingout(true);
+    
+        // Fetch booking service details
+        const res = await api.post('/booking/getBookingServiceById', { booking_id: id });
+    
+        if (!res.data.data || res.data.data.length === 0) {
+          alert("No room history data found");
+          return;
+        }
+    
+        const roomNumber = res.data.data[0].room_number; // Access first item safely
+    
+        // Fetch room history based on room number
+        const res1 = await api.post('/booking/BookingHistoryRoomNumber', { room_number: roomNumber });
+    
+        if (!res1.data.data || res1.data.data.length === 0) {
+          alert("No room history found for this room number.");
+          return;
+        }
+    
+        // Update room availability
+        const roomVacatePromises = res1.data.data.map((item) => {
+          const statusInsert = {
+            room_history_id: item.room_history_id,
+            is_available: "yes",
+          };
+          return api.post('/booking/edit-Rooms-History-Edit', statusInsert);
+        });
+    
+        await Promise.all(roomVacatePromises);
+    
+        alert("Check Out Successfully!");
+        // window.location.reload();
+      } catch (error) {
+        console.error("Error updating booking:", error);
+        alert("Failed to update booking.");
+      } finally {
+        setIsLoadingout(false); // Hide loader after API call (success or failure)
+      }
+    };
+    
+
     const BookingHistory = (roomTyp) => {
       api
         .post('/booking/BookingHistoryById', { room_type:roomTyp})
@@ -196,6 +309,7 @@ export default function BookingMoreDetails({
       getRoomType()
       getContactLinked()
       getValuelistStatus()
+      getOrdersById();
     }, [id]);
 
     useEffect(() => {
@@ -203,12 +317,28 @@ export default function BookingMoreDetails({
     }, [newContactData && newContactData.room_type]);
   return (
     <ComponentCard title="More Details">
+       {isLoading && (
+  <div className="loader-overlay">
+    <div className="spinner"></div>
+    <p>Processing Update Booking...</p>
+  </div>
+)}
+   {isLoadingout && (
+  <div className="loader-overlay">
+    <div className="spinner"></div>
+    <p>Processing Check Out...</p>
+  </div>
+)}
       <ToastContainer></ToastContainer>
       <Tab toggle={toggle} tabs={tabs} />
       <TabContent className="p-4" activeTab={activeTab}>
          <TabPane tabId="1">
          <BookingRoomLinked
           roomStatus ={roomType}
+          orderId={orderId}
+          id={id}
+          RoomVacate={RoomVacate}
+          editOrderItemUpdate={editOrderItemUpdate}
           setContactData={setContactData}
           setEditContactEditModal={setEditContactEditModal}
           deleteRecord={deleteRecord}
@@ -221,7 +351,8 @@ export default function BookingMoreDetails({
           AddNewContact={AddNewContact}
           bookingHistory={bookingHistory}
           bookingDetails={bookingDetails}
-        
+          getOrdersById={getOrdersById}
+          contactAddress={contactAddress}
          >
          </BookingRoomLinked>
          <BookingRoomEditModal

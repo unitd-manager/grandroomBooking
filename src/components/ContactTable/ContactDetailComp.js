@@ -43,21 +43,6 @@ export default function ContactDetailComp({ contactDetails, handleInputs }) {
               <Col md="4">
                 <FormGroup>
                   <Label>
-                    Password
-                  </Label>
-                  <Input
-                    type="text"
-                    onChange={handleInputs}
-                    value={contactDetails && contactDetails.pass_word}
-                    name="pass_word"
-                  />
-                </FormGroup>
-              </Col>
-            </Row>
-            <Row>
-            <Col md="4">
-                <FormGroup>
-                  <Label>
                     Phone
                   </Label>
                   <Input
@@ -68,6 +53,8 @@ export default function ContactDetailComp({ contactDetails, handleInputs }) {
                   />
                 </FormGroup>
               </Col>
+            </Row>
+            <Row>
               <Col md="4">
                 <FormGroup>
                   <Label>
@@ -91,6 +78,76 @@ export default function ContactDetailComp({ contactDetails, handleInputs }) {
                     onChange={handleInputs}
                     value={contactDetails && contactDetails.address_area}
                     name="address_area"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="4">
+                <FormGroup>
+                  <Label>
+                   Address2
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputs}
+                    value={contactDetails && contactDetails.address_flat}
+                    name="address_flat"
+                   
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="4">
+                <FormGroup>
+                  <Label>
+                   Address State
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputs}
+                    value={contactDetails && contactDetails.address_state}
+                    name="address_state"
+                   
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="4">
+                <FormGroup>
+                  <Label>
+                   Address Street
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputs}
+                    value={contactDetails && contactDetails.address_street}
+                    name="address_street"
+                   
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="4">
+                <FormGroup>
+                  <Label>
+                  Postal Code
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputs}
+                    value={contactDetails && contactDetails.address_po_code}
+                    name="address_po_code"
+                   
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="4">
+                <FormGroup>
+                  <Label>
+                 Country
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputs}
+                    value={contactDetails && contactDetails.address_country}
+                    name="address_country"
+                   
                   />
                 </FormGroup>
               </Col>
