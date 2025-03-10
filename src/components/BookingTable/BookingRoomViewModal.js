@@ -12,22 +12,22 @@ import {
   ModalHeader,
 } from 'reactstrap';
 import PropTypes from 'prop-types';
-import message from '../Message';
+// import message from '../Message';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import '../../views/form-editor/editor.scss';
 
-import api from '../../constants/api';
+// import api from '../../constants/api';
 
 const ContactEditModal = ({
   contactData,
-  editContactEditModal,
-  setEditContactEditModal,
+  editContactViewModal,
+  setEditContactViewModal,
   roomStatus,
 }) => {
   ContactEditModal.propTypes = {
     contactData: PropTypes.object,
-    editContactEditModal: PropTypes.bool,
-    setEditContactEditModal: PropTypes.func,
+    editContactViewModal: PropTypes.bool,
+    setEditContactViewModal: PropTypes.func,
     roomStatus: PropTypes.array,
   };
 
@@ -73,27 +73,27 @@ const ContactEditModal = ({
   ]);
 
   // Function to edit data in the database
-  const editContactsData = () => {
-    api
-      .post('/booking/edit-Booking-History', contactinsert)
-      .then(() => {
-        message('Record edited successfully', 'success');
-        setEditContactEditModal(false);
-      })
-      .catch(() => {
-        message('Unable to edit record.', 'error');
-      });
-  };
+  // const editContactsData = () => {
+  //   api
+  //     .post('/booking/edit-Booking-History', contactinsert)
+  //     .then(() => {
+  //       message('Record edited successfully', 'success');
+  //       setEditContactViewModal(false);
+  //     })
+  //     .catch(() => {
+  //       message('Unable to edit record.', 'error');
+  //     });
+  // };
 
   return (
     <>
-      <Modal size="lg" isOpen={editContactEditModal}>
+      <Modal size="lg" isOpen={editContactViewModal}>
         <ModalHeader>
           Rooms Details
           <Button
             color="secondary"
             onClick={() => {
-              setEditContactEditModal(false);
+              setEditContactViewModal(false);
             }}
           >
             X
@@ -144,6 +144,7 @@ const ContactEditModal = ({
                   onChange={handleInputs}
                   value={contactinsert?.qty || ''}
                   name="qty"
+                  disabled
                 />
               </FormGroup>
             </Col>
@@ -155,6 +156,7 @@ const ContactEditModal = ({
                   onChange={handleInputs}
                   value={contactinsert?.amount || ''}
                   name="amount"
+                  disabled
                 />
               </FormGroup>
             </Col>
@@ -172,6 +174,7 @@ const ContactEditModal = ({
                   onChange={handleInputs}
                   value={contactinsert?.extra_person || ''}
                   name="extra_person"
+                  disabled
                 />
               </FormGroup>
             </Col>
@@ -183,6 +186,7 @@ const ContactEditModal = ({
                   onChange={handleInputs}
                   value={contactinsert?.extra_person_amount || ''}
                   name="extra_person_amount"
+                  disabled
                 />
               </FormGroup>
             </Col>
@@ -200,6 +204,7 @@ const ContactEditModal = ({
                   onChange={handleInputs}
                   value={contactinsert?.water_qty || ''}
                   name="water_qty"
+                  disabled
                 />
               </FormGroup>
             </Col>
@@ -211,6 +216,7 @@ const ContactEditModal = ({
                   onChange={handleInputs}
                   value={contactinsert?.water_amount || ''}
                   name="water_amount"
+                  disabled
                 />
               </FormGroup>
             </Col>
@@ -228,6 +234,7 @@ const ContactEditModal = ({
                   onChange={handleInputs}
                   value={contactinsert && contactinsert.capacity}
                   name="capacity"
+                  disabled
                 />
               </FormGroup>
             </Col>
@@ -239,6 +246,7 @@ const ContactEditModal = ({
                   onChange={handleInputs}
                   value={contactinsert?.restaurant_service_amount || ''}
                   name="restaurant_service_amount"
+                  disabled
                 />
               </FormGroup>
             </Col>
@@ -257,10 +265,10 @@ const ContactEditModal = ({
         </ModalBody>
 
         <ModalFooter>
-          <Button color="primary" onClick={editContactsData}>
+          {/* <Button color="primary" onClick={editContactsData}>
             Submit
-          </Button>
-          <Button color="secondary" onClick={() => setEditContactEditModal(false)}>
+          </Button> */}
+          <Button color="secondary" onClick={() => setEditContactViewModal(false)}>
             Cancel
           </Button>
         </ModalFooter>

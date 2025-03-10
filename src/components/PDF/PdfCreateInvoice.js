@@ -7,8 +7,8 @@ import moment from 'moment';
 //import Converter from 'number-to-words';
 import api from '../../constants/api';
 import message from '../Message';
-import PdfFooter from './PdfFooter';
-import PdfHeader2 from './PdfHeader2';
+// import PdfFooter from './PdfFooter';
+import PdfHeader from './PdfHeader';
 //import PdfHeader2 from './PdfHeader2';
 
 const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
@@ -17,7 +17,7 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
     projectDetail: PropTypes.any,
   };
   const [hfdata, setHeaderFooterData] = React.useState();
-  const [hfdata1, setHeaderFooterData1] = React.useState();
+  // const [hfdata1, setHeaderFooterData1] = React.useState();
   const [cancelInvoice, setCancelInvoice] = React.useState([]);
   const [createInvoice, setCreateInvoice] = React.useState();
   const [gTotal, setGtotal] = React.useState(0);
@@ -30,24 +30,21 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
       setHeaderFooterData(res.data.data);
     });
   }, []);
-  React.useEffect(() => {
-    api.get('/setting/getSettingsForCompany1').then((res) => {
-      setHeaderFooterData1(res.data.data);
-    });
-  }, []);
+  // React.useEffect(() => {
+  //   api.get('/setting/getSettingsForCompany1').then((res) => {
+  //     setHeaderFooterData1(res.data.data);
+  //   });
+  // }, []);
 
   console.log('companyInvoice', projectDetail);
   const findCompany = (key) => {
     console.log('key', key);
-    if (projectDetail.company_invoice === 'Company Invoice 1') {
+  
       if (hfdata && hfdata.length > 0) {
         const filteredResult = hfdata.find((e) => e.key_text === key);
         return filteredResult ? filteredResult.value : '';
       }
-    } else {
-      const filteredResult1 = hfdata1.find((e) => e.key_text === key);
-      return filteredResult1 ? filteredResult1.value : '';
-    }
+ 
     return '';
   };
 
@@ -64,7 +61,7 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
   };
   const calculateTotal = () => {
     const grandTotal = cancelInvoice.reduce((acc, element) => acc + element.amount, 0);
-    const gstValue = createInvoice.gst_value || 0;
+    const gstValue = 0.12;
     const total = grandTotal + gstValue;
     return total;
   };
@@ -98,12 +95,7 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
           style: 'tableHead',
         },
         {
-          text: 'Description',
-          style: 'tableHead',
-          alignment: 'center',
-        },
-        {
-          text: 'Uom',
+          text: 'Room Type',
           style: 'tableHead',
           alignment: 'center',
         },
@@ -113,7 +105,7 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
           alignment: 'center',
         },
         {
-          text: 'Unit Price',
+          text: 'Price',
           style: 'tableHead',
           alignment: 'right',
         },
@@ -133,12 +125,6 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
         },
         {
           text: `${element.item_title ? element.item_title : ''}`,
-          border: [false, false, false, true],
-          style: 'tableBody',
-          alignment: 'center',
-        },
-        {
-          text: `${element.unit ? element.unit : ''}`,
           border: [false, false, false, true],
           style: 'tableBody',
           alignment: 'center',
@@ -166,9 +152,9 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
 
     const dd = {
       pageSize: 'A4',
-      header: PdfHeader2({ findCompany }),
+      header: PdfHeader({ findCompany }),
       pageMargins: [40, 150, 40, 80],
-      footer: PdfFooter,
+      // footer: PdfFooter,
       content: [
         {
           layout: {
@@ -213,7 +199,7 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
             body: [
               [
                 {
-                  text: `TAX INVOICE`,
+                  text: `INVOICE`,
                   alignment: 'center',
                   style: 'tableHead',
                 },
@@ -257,47 +243,13 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
                   style: ['textSize'],
                   margin: [100, 0, 0, 0],
                 },
-                {
-                  text: `Code :${createInvoice.code ? createInvoice.code : ''} `,
-                  style: ['textSize'],
-                  margin: [100, 0, 0, 0],
-                },
-                {
-                  text: `SO Ref Number :${createInvoice.so_ref_no ? createInvoice.so_ref_no : ''} `,
-                  style: ['textSize'],
-                  margin: [100, 0, 0, 0],
-                },
-                {
-                  text: ` PO Number :${createInvoice.po_number ? createInvoice.po_number : ''} `,
-                  style: ['textSize'],
-                  margin: [100, 0, 0, 0],
-                },
+              
                 '\n',
               ],
             },
           ],
         },
         '\n',
-
-        {
-          columns: [
-            {
-              text: `ATTN :\n Dear Sir,\n Site Name : ${
-                createInvoice.title ? createInvoice.title : ''
-              } \n Site Code : ${
-                createInvoice.site_code ? createInvoice.site_code : ''
-              }\n Reference :  ${
-                createInvoice.reference ? createInvoice.reference : ''
-              }\n Project Reference :${
-                createInvoice.project_reference ? createInvoice.project_reference : ''
-              } \n Project Location :${
-                createInvoice.project_location ? createInvoice.project_location : ''
-              } `,
-              style: 'textSize',
-              bold: true,
-            },
-          ],
-        },
         '\n',
 
         {
@@ -339,7 +291,7 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
           },
           table: {
             headerRows: 1,
-            widths: [20, 90, '*', '*', 50, 70],
+            widths: [20, 90, '*', 50, 70],
 
             body: productItems,
           },
@@ -355,28 +307,28 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
             {
               stack: [
                 {
-                  text: `SubTotal $ : ${gTotal.toLocaleString('en-IN', {
+                  text: `SubTotal : ${gTotal.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
                   })}`,
-                  style: ['textSize'],
+                  style: ['textSize1'],
+                  margin: [145, 0, 0, 0],
+                },
+                '\n',
+                // {
+                //   text: `Discount : ${createInvoice.discount ? createInvoice.discount : ''}`,
+                //   style: ['textSize'],
+                //   margin: [145, 0, 0, 0],
+                // },
+                // '\n',
+                {
+                  text: `GST :  ${createInvoice.gst_value ? createInvoice.gst_value : ''}`,
+                  style: ['textSize1'],
                   margin: [145, 0, 0, 0],
                 },
                 '\n',
                 {
-                  text: `Discount : ${createInvoice.discount ? createInvoice.discount : ''}`,
-                  style: ['textSize'],
-                  margin: [145, 0, 0, 0],
-                },
-                '\n',
-                {
-                  text: `VAT :  ${createInvoice.gst_value ? createInvoice.gst_value : ''}`,
-                  style: ['textSize'],
-                  margin: [145, 0, 0, 0],
-                },
-                '\n',
-                {
-                  text: `Total $ : ${calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
-                  style: ['textSize'],
+                  text: `Total : ${calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+                  style: ['textSize1'],
                   margin: [145, 0, 0, 0],
                 },
               ],
@@ -388,13 +340,8 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
         '\n',
 
         {
-          text: 'Terms and conditions : \n\n 1.The above rates are in Singapore Dollars. \n\n 2. Payment Terms 30 days from the date of Invoice \n\n  3.Payment should be made in favor of " CUBOSALE ENGINEERING PTE LTD " \n\n 4.Any discrepancies please write to us within 3 days from the date of invoice  \n\n\n 5. For Account transfer \n\n \n\n',
+          text: 'Terms and conditions : \n\n ',
           style: 'textSize',
-        },
-        {
-          text: 'UNITED OVERSEAS BANK \n ACCT NAME: CUBOSALE ENGINEERING PTE LTD \n ACCT NO.:- 3923023427 \n Paynow By UEN : 201222688M   \n\n',
-          style: 'textSize',
-          bold: true,
         },
 
         '\n\n',
@@ -417,6 +364,11 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
         },
         textSize: {
           fontSize: 10,
+        
+        },
+        textSize1: {
+          fontSize: 10,
+          alignment: 'right',
         },
         notesTitle: {
           bold: true,

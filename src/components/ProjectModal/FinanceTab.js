@@ -495,7 +495,7 @@ console.log('orderddddd',bookingService)
             <Link to={`/FinanceEdit/${orderId}?tab=3`}>
               {' '}
               <Button color="primary" className="shadow-none">
-                Go to order
+                Go to Summary
               </Button>
             </Link>
           </Col>

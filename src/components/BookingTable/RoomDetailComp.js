@@ -96,7 +96,7 @@ export default function RoomDetailComp({ roomDetails, handleInputs, roomType }) 
                   />
                 </FormGroup>
               </Col>
-              <Col md="3">
+              {/* <Col md="3">
                 <FormGroup>
                   <Label>Has Balcony</Label>
                   <br></br>
@@ -302,7 +302,7 @@ export default function RoomDetailComp({ roomDetails, handleInputs, roomType }) 
                     onChange={handleInputs}
                   />
                 </FormGroup>
-              </Col>
+              </Col> */}
             </Row>
           </ComponentCard>
         </FormGroup>

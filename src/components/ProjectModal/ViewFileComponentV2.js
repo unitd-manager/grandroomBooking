@@ -5,15 +5,14 @@ import * as Icon from 'react-feather';
 import message from '../Message';
 import api from '../../constants/api';
 
-function ViewFileComponentV2({ moduleId, roomName,update,setUpdate }) {
+function ViewFileComponentV2({ moduleId, roomName }) {
   ViewFileComponentV2.propTypes = {
     moduleId: PropTypes.string,
     roomName: PropTypes.string,
-    update:PropTypes.bool,
-    setUpdate:PropTypes.func
   };
 
   const tableStyle = {};
+
   const [getFile, setGetFile] = useState(null);
 
   const getFiles = () => {
@@ -38,7 +37,9 @@ function ViewFileComponentV2({ moduleId, roomName,update,setUpdate }) {
           .then((res) => {
             console.log(res);
             Swal.fire('Deleted!', 'Media has been deleted.', 'success');
-            setUpdate(!update)
+            //setViewLineModal(false)
+
+            window.location.reload();
           })
           .catch(() => {
             message('Unable to Delete Media', 'info');
@@ -49,10 +50,6 @@ function ViewFileComponentV2({ moduleId, roomName,update,setUpdate }) {
 
   useEffect(() => {
     getFiles();
-  }, [update]);
-  
-  useEffect(() => {
-    getFiles();
   }, []);
 
   return (
@@ -60,23 +57,31 @@ function ViewFileComponentV2({ moduleId, roomName,update,setUpdate }) {
       <table style={tableStyle}>
         <thead>
           <tr style={tableStyle}>
-            <th style={tableStyle}>File Name</th>
+            <th style={tableStyle}>
+             File Name
+            </th>
             <th width="5%"></th>
           </tr>
         </thead>
         <tbody>
-          {getFile ? (
-            getFile.map((res) => {
-              return (
+        {getFile ? (
+          getFile.map((res) => {
+            return (
                 <tr key={res.media_id}>
                   <td style={tableStyle}>
-                    <a
-                      href={`https://chitragrand.unitdtechnologies.com/storage/uploads/${res.name}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {res.name}
-                    </a>
+                      <a
+                        href={`https://chitragrand.unitdtechnologies.com/storage/uploads/${res.name}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img
+  src={`https://chitragrand.unitdtechnologies.com/storage/uploads/${res.name}`} 
+  width={200}
+  height={200}
+  alt={`${res.name}`}
+  
+/> {res.name}
+                      </a>
                   </td>
                   <td style={tableStyle}>
                     <button
@@ -90,16 +95,13 @@ function ViewFileComponentV2({ moduleId, roomName,update,setUpdate }) {
                     </button>
                   </td>
                 </tr>
-              );
-            })
-          ) : (
-            <tr>
-              <td>
-                <p>no files uploaded yet</p>
-              </td>
-            </tr>
-          )}
+            );
+          })
+        ) : (
+          <tr><td><p>no files uploaded yet</p></td></tr>
+        )}
         </tbody>
+        
       </table>
     </>
   );

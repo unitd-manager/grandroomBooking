@@ -21,6 +21,7 @@ import api from '../../constants/api';
 export default function BookingRoomLinked({
   setContactData,
   setEditContactEditModal,
+  setEditContactViewModal,
   // deleteRecord,
   contactsDetails,
   addContactToggle,
@@ -37,10 +38,12 @@ export default function BookingRoomLinked({
   id,
   getOrdersById,
   contactAddress,
+ 
 }) {
   BookingRoomLinked.propTypes = {
     setContactData: PropTypes.func,
     setEditContactEditModal: PropTypes.func,
+    setEditContactViewModal: PropTypes.func,
     // deleteRecord: PropTypes.func,
     contactsDetails: PropTypes.any,
     addContactToggle: PropTypes.func,
@@ -97,6 +100,27 @@ export default function BookingRoomLinked({
     },
     {
       name: 'Room Number',
+      selector: 'room_number',
+      sortable: true,
+      grow: 0,
+      wrap: true,
+    },
+    {
+      name: 'Days',
+      selector: 'room_number',
+      sortable: true,
+      grow: 0,
+      wrap: true,
+    },
+    {
+      name: 'Room Amount',
+      selector: 'room_number',
+      sortable: true,
+      grow: 0,
+      wrap: true,
+    },
+    {
+      name: 'Total Amount',
       selector: 'room_number',
       sortable: true,
       grow: 0,
@@ -270,7 +294,7 @@ console.log('contactAddress',contactAddress)
   </div>
 )}
       <Row>
-        {bookingDetails?.status !== 'Completed' ? (
+      {!orderId && (
           <Col md="3">
             <FormGroup>
               <Button
@@ -374,8 +398,6 @@ console.log('contactAddress',contactAddress)
               </Modal>
             </FormGroup>
           </Col>
-        ) : (
-          <span></span>
         )}
 
           {!orderId && (
@@ -393,25 +415,32 @@ console.log('contactAddress',contactAddress)
           </Col>
         )}
 
-        <Col md="3">
-          <Button
-            color="danger"
-            className="shadow-none"
-            onClick={editOrderItemUpdate} // Direct function reference
-          >
-            Update Order
-          </Button>
-        </Col>
+        {!orderId  || bookingDetails?.status !== 'Completed'&& (
 
         <Col md="3">
           <Button
             color="danger"
             className="shadow-none"
-            onClick={RoomVacate} // Direct function reference
+            onClick={editOrderItemUpdate}
+            style={{marginBottom:10}} // Direct function reference
+          >
+            Update Booking
+          </Button>
+        </Col>
+          )}
+
+        {!orderId ||  bookingDetails?.status !== 'Completed' && (
+        <Col md="3">
+          <Button
+            color="danger"
+            className="shadow-none"
+            onClick={RoomVacate}
+            style={{marginBottom:10}} // Direct function reference
           >
             Check Out
           </Button>
         </Col>
+          )}
       </Row>
       <Row>
         <Table id="example" className="display border border-secondary rounded">
@@ -443,7 +472,16 @@ console.log('contactAddress',contactAddress)
                       </td>
                     ) : (
                       <td>
-                        <text>Not Edit</text>
+                        <div className="anchor">
+                          <span
+                            onClick={() => {
+                              setContactData(element);
+                              setEditContactViewModal(true);
+                            }}
+                          >
+                           View details
+                          </span>
+                        </div>
                       </td>
                     )}
                     {/* <td>
@@ -455,8 +493,11 @@ console.log('contactAddress',contactAddress)
           </td> */}
                     <td>{element.room_type}</td>
                     <td>{element.room_number}</td>
+                    <td>{element.qty}</td>
+                    <td>{element.amount}</td>
+                    <td>{element.qty*element.amount}</td>
                     <td>{element.capacity}</td>
-                    {bookingDetails?.status === 'Completed' ? (
+                    {orderId  ? (
                       <td>
                         <text>Booking Completed</text>
                       </td>

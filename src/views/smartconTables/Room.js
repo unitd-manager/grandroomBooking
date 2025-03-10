@@ -76,7 +76,7 @@ const Room = () => {
       wrap: true,
     },
     {
-      name: 'No Of Persons',
+      name: 'Available',
       selector: 'capacity',
       sortable: true,
       width: 'auto',

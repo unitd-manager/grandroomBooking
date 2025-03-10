@@ -19,6 +19,7 @@ import Tab from '../project/Tab';
 import FinanceTab from '../ProjectModal/FinanceTab';
 import BookingRoomLinked from './BookingRoomLinked';
 import BookingRoomEditModal from './BookingRoomEditModal'
+import BookingRoomViewModal from './BookingRoomViewModal'
 import api from '../../constants/api';
 import message from '../Message';
 import '../../assets/css/Loader.css'
@@ -50,6 +51,7 @@ export default function BookingMoreDetails({
   const [activeTab, setActiveTab] = useState('1');
   const [roomType, setRoomType] = useState();
   const [editContactEditModal, setEditContactEditModal] = useState(false);
+  const [editContactViewModal, setEditContactViewModal] = useState(false);
   const [addContactModal, setAddContactModal] = useState(false);
   const [contactsDetails, setContactsDetails] = useState(null);
   const [contactData, setContactData] = useState();
@@ -262,29 +264,41 @@ export default function BookingMoreDetails({
           return;
         }
     
-        const roomNumber = res.data.data[0].room_number; // Access first item safely
+        const roomNumbers = res.data.data.map((item) => item.room_number); // Extract room numbers
     
-        // Fetch room history based on room number
-        const res1 = await api.post('/booking/BookingHistoryRoomNumber', { room_number: roomNumber });
+        // Fetch room history for each room number
+        const roomHistoryPromises = roomNumbers.map(async (roomNumber) => {
+          const res1 = await api.post('/booking/BookingHistoryRoomNumber', { room_number: roomNumber });
     
-        if (!res1.data.data || res1.data.data.length === 0) {
-          alert("No room history found for this room number.");
-          return;
-        }
+          if (!res1.data.data || res1.data.data.length === 0) {
+            console.warn(`No room history found for room number: ${roomNumber}`);
+            return null;
+          }
     
-        // Update room availability
-        const roomVacatePromises = res1.data.data.map((item) => {
-          const statusInsert = {
-            room_history_id: item.room_history_id,
+          return {
+            room_history_id: res1.data.data[0].room_history_id, // Use first result
             is_available: "yes",
           };
-          return api.post('/booking/edit-Rooms-History-Edit', statusInsert);
         });
     
-        await Promise.all(roomVacatePromises);
+        // Resolve all room history fetch requests
+        const roomHistories = await Promise.all(roomHistoryPromises);
+    
+        // Filter out null values (in case no history was found for some rooms)
+        const validRoomUpdates = roomHistories.filter(Boolean);
+    
+        // Update room availability in parallel
+        const roomUpdatePromises = validRoomUpdates.map((statusInsert) =>
+          api.post('/booking/edit-Rooms-History-Edit', statusInsert)
+        );
+    
+        await Promise.all(roomUpdatePromises);
+    
+        // Update booking status to "Completed"
+        await api.post("/booking/edit-Booking_status", { status: "Completed", booking_id: id });
     
         alert("Check Out Successfully!");
-        // window.location.reload();
+        window.location.reload();
       } catch (error) {
         console.error("Error updating booking:", error);
         alert("Failed to update booking.");
@@ -292,6 +306,7 @@ export default function BookingMoreDetails({
         setIsLoadingout(false); // Hide loader after API call (success or failure)
       }
     };
+    
     
 
     const BookingHistory = (roomTyp) => {
@@ -341,8 +356,10 @@ export default function BookingMoreDetails({
           editOrderItemUpdate={editOrderItemUpdate}
           setContactData={setContactData}
           setEditContactEditModal={setEditContactEditModal}
+          setEditContactViewModal={setEditContactViewModal}
           deleteRecord={deleteRecord}
           editContactEditModal={editContactEditModal}
+          editContactViewModal={editContactViewModal}
           addContactToggle={addContactToggle}
           addContactModal={addContactModal}
           newContactData={newContactData}
@@ -361,6 +378,13 @@ export default function BookingMoreDetails({
               contactData={contactData}
               roomStatus={roomType}
               BookingroomStatus={BookingroomStatus}
+            />
+            <BookingRoomViewModal
+             editContactViewModal={editContactViewModal}
+             setEditContactViewModal={setEditContactViewModal}
+             contactData={contactData}
+             roomStatus={roomType}
+             BookingroomStatus={BookingroomStatus}
             />
          </TabPane>
          <TabPane tabId="2">
