@@ -61,7 +61,7 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
   };
   const calculateTotal = () => {
     const grandTotal = cancelInvoice.reduce((acc, element) => acc + element.amount, 0);
-    const gstValue = 0.12;
+    const gstValue = createInvoice.gst_value || 0;
     const total = grandTotal + gstValue;
     return total;
   };
@@ -100,7 +100,7 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
           alignment: 'center',
         },
         {
-          text: 'Qty',
+          text: 'No Of Days',
           style: 'tableHead',
           alignment: 'center',
         },
@@ -214,13 +214,16 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
             {
               stack: [
                 {
-                  text: `To :${createInvoice.company_name ? createInvoice.company_name : ''}\n${
+                  text: `To : ${createInvoice.cust_company_name ? createInvoice.cust_company_name : ''}\n${
                     createInvoice.cust_address1 ? createInvoice.cust_address1 : ''
                   }\n ${createInvoice.cust_address2 ? createInvoice.cust_address2 : ''}\n${
                     createInvoice.cust_address_country ? createInvoice.cust_address_country : ''
                   }\n${
                     createInvoice.cust_address_po_code ? createInvoice.cust_address_po_code : ''
-                  }`,
+                  }\n
+                  \n GST NO:${
+                    createInvoice.cust_gst_no ? createInvoice.cust_gst_no : ''
+                  } `,
                   style: ['textSize'],
                   margin: [0, 0, 0, 0],
                 },
@@ -307,7 +310,7 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
             {
               stack: [
                 {
-                  text: `SubTotal : ${gTotal.toLocaleString('en-IN', {
+                  text: `SubTotal :${gTotal.toLocaleString('en-IN', {
                     minimumFractionDigits: 2,
                   })}`,
                   style: ['textSize1'],
@@ -321,13 +324,19 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
                 // },
                 // '\n',
                 {
-                  text: `GST :  ${createInvoice.gst_value ? createInvoice.gst_value : ''}`,
+                  text: `SGST :${(createInvoice.sgst ? createInvoice.sgst : '').toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
                   style: ['textSize1'],
                   margin: [145, 0, 0, 0],
                 },
                 '\n',
                 {
-                  text: `Total : ${calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+                  text: `CGST :${(createInvoice.cgst ? createInvoice.cgst : '').toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+                  style: ['textSize1'],
+                  margin: [145, 0, 0, 0],
+                },
+                '\n',
+                {
+                  text: `Total :${calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
                   style: ['textSize1'],
                   margin: [145, 0, 0, 0],
                 },
@@ -338,13 +347,42 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
         '\n',
         //{ text: `Total $ :${Converter.toWords(Total)}` },
         '\n',
-
+        '\n',
+        '\n',
+        '\n',
+        '\n',
+        '\n',
+        '\n',
         {
-          text: 'Terms and conditions : \n\n ',
-          style: 'textSize',
+          columns: [
+            {
+              stack: [
+                {
+                  text: `Guest Signature`,
+                  style: ['textSize'],
+                  margin: [20, 0, 0, 0],
+                },
+              ],
+            },
+            {
+              stack: [
+                {
+                  text: ` Staff Signature `,
+                  style: ['textSize'],
+                  margin: [150, 0, 0, 0],
+                },
+                '\n',
+                
+              
+              
+                '\n',
+              ],
+            },
+          ],
         },
-
-        '\n\n',
+        '\n',
+        '\n',
+        
       ],
       margin: [0, 50, 50, 50],
 

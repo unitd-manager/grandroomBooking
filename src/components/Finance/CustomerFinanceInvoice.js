@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Form, Table,CardTitle,Row } from 'reactstrap';
+import { Form, Table} from 'reactstrap';
 import PdfCreateInvoice from '../PDF/PdfCreateInvoice';
 //  import PdfCreateInvoiceArabic from '../PDF/PdfCreateInvoiceArabic'
 
@@ -9,7 +9,7 @@ import PdfCreateInvoice from '../PDF/PdfCreateInvoice';
 export default function CustomerFinanceInvoice({
   createInvoice,
   cancelInvoice,
-  invoiceCancel,
+  // invoiceCancel,
   setEditInvoiceModal,
   setEditModal,
   setInvoiceDatas,
@@ -19,7 +19,7 @@ export default function CustomerFinanceInvoice({
   CustomerFinanceInvoice.propTypes = {
     createInvoice: PropTypes.array,
     cancelInvoice: PropTypes.array,
-    invoiceCancel: PropTypes.func,
+    // invoiceCancel: PropTypes.func,
     setEditInvoiceModal: PropTypes.func,
     setEditModal: PropTypes.func,
     setInvoiceDatas:PropTypes.func,
@@ -38,16 +38,16 @@ export default function CustomerFinanceInvoice({
     { name: 'Print' },
     //  { name: 'PrintArabic' },
     { name: 'Edit' },
-    { name: 'Cancel' },
+    // { name: 'Cancel' },
   ];
   //Structure of CancelInvoice 
-  const invoiceTableColumns1 = [
-    { name: 'Invoice Code' },
-    { name: 'Status' },
-    { name: 'Invoice Date' },
-    { name: 'Amount' },
+  // const invoiceTableColumns1 = [
+  //   { name: 'Invoice Code' },
+  //   { name: 'Status' },
+  //   { name: 'Invoice Date' },
+  //   { name: 'Amount' },
     
-  ];
+  // ];
   return (
     // Invoice Tab
    
@@ -98,7 +98,7 @@ export default function CustomerFinanceInvoice({
                             </span>
                           
                         </td>
-                        {element.status === 'due' && (
+                        {/* {element.status === 'due' && (
                         <td> <span
                               onClick={() => {
                                 if (
@@ -111,20 +111,20 @@ export default function CustomerFinanceInvoice({
                             >
                               Cancel
                             </span></td>
-                            )}
+                            )} */}
                       </tr>
                     );
                   })}
               </tbody>
             </Table>
-            <Row className="mt-4">
+            {/* <Row className="mt-4">
         <CardTitle tag="h4" className="border-bottom bg-secondary p-2 mb-0 text-white">
           {' '}
           CANCEL INVOICE(S){' '}
         </CardTitle>
-      </Row>
+      </Row> */}
       <br />
-      <Row className="mt-4">
+      {/* <Row className="mt-4">
             <Table id="example">
               <thead>
                 <tr>
@@ -149,7 +149,7 @@ export default function CustomerFinanceInvoice({
                   })}
               </tbody>
             </Table>
-            </Row>
+            </Row> */}
           </div>
         </div>
       </Form>

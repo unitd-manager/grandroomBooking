@@ -350,15 +350,48 @@ console.log('orderddddd',bookingService)
       const invoiceCodeResponse = await api.post('/commonApi/getCodeValue', { type: "invoice",});
       const invoiceCode = invoiceCodeResponse.data.data;
 
-  
-      // Ensure OrdersDetails contains required data
-      const updatedBookingService = { 
-        ...OrdersDetails, 
-        invoice_amount: totalAmount.total_amount, 
-        status: 'Due' ,
-        invoice_code:invoiceCode
-      };
-  
+        // Fetch GST value
+    const getgst = await api.get('/finance/getGst');
+    const gstData = getgst.data.data;  // This is likely an object { value: '12' }
+    
+    // Extract GST percentage safely
+    const gstPercentage = parseFloat(gstData.value);  // Convert '12' (string) to 12 (number)
+    
+    const getIgst = await api.get('/finance/getIGst');
+    const gstDataIgst = getIgst.data.data;  // This is likely an object { value: '12' }
+    
+    // Extract GST percentage safely
+    const gstPercentagesgst = parseFloat(gstDataIgst.value);
+
+    const getcgst = await api.get('/finance/getSGst');
+    const gstDatacgst = getcgst.data.data;  // This is likely an object { value: '12' }
+    
+    // Extract GST percentage safely
+    const gstPercentagecgst = parseFloat(gstDatacgst.value);
+    
+
+    console.log('GST Percentage:', gstPercentage);
+
+    // ✅ Correct GST Calculation
+    const totalAmountValue = parseFloat(totalAmount.total_amount); // Ensure it's a number
+    const gstValue = totalAmountValue * (gstPercentage / 100); 
+    const sgstValue = totalAmountValue * (gstPercentagesgst / 100); 
+    const cgstValue = totalAmountValue * (gstPercentagecgst / 100);
+    const invoiceAmount = totalAmountValue + gstValue; 
+
+    console.log('GST Value:', gstValue);
+    console.log('Invoice Amount:', invoiceAmount);
+
+    // Prepare updated order details
+    const updatedBookingService = { 
+      ...OrdersDetails, 
+      invoice_amount: invoiceAmount, 
+      gst_value: gstValue,
+      sgst:sgstValue,
+      cgst:cgstValue,
+      status: 'Due',
+      invoice_code: invoiceCode
+    };
       // Insert invoice
       const res = await api.post("/finance/insertInvoice", updatedBookingService);
       

@@ -171,6 +171,7 @@ console.log('contactAddress',contactAddress)
     order_status:"Booking Confirm",
     shipping_first_name:contactAddress.first_name,
     cust_company_name:contactAddress.first_name,
+    cust_gst_no:contactAddress.gst_no,
 
     }
     setIsLoading(true);

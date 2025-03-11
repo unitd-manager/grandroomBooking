@@ -91,7 +91,7 @@ export default function BookingMoreDetails({
         setContactsDetails(res.data.data);
       })
       .catch(() => {
-        message('Room Data Not Found', 'info');
+        // message('Room Data Not Found', 'info');
       });
   };
 

@@ -8,14 +8,14 @@ export default function CustomerFinanceReceipt({
   receipt,
   setEditReceiptModal,
   setReceiptDataModal,
-  receiptCancel,
+  // receiptCancel,
   // projectDetail,
 }) {
   CustomerFinanceReceipt.propTypes = {
     receipt: PropTypes.array,
     setEditReceiptModal: PropTypes.func,
     setReceiptDataModal: PropTypes.func,
-    receiptCancel: PropTypes.func,
+    // receiptCancel: PropTypes.func,
     // projectDetail: PropTypes.any,
   };
 
@@ -28,7 +28,7 @@ export default function CustomerFinanceReceipt({
     { name: 'Receipt Amount' },
     // { name: 'Print' },
     { name: 'View' },
-    { name: 'Cancel' },
+    // { name: 'Cancel' },
   ];
 
   return (
@@ -70,7 +70,7 @@ export default function CustomerFinanceReceipt({
                         </span>
                       </td>
 
-                      <td>
+                      {/* <td>
                         {element.receipt_status.toLowerCase() === 'paid' && (
                           <span
                             onClick={() => {
@@ -86,7 +86,7 @@ export default function CustomerFinanceReceipt({
                             Cancel
                           </span>
                         )}
-                      </td>
+                      </td> */}
                     </tr>
                   );
                 })}

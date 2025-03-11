@@ -6,7 +6,7 @@ import TenderContactDetails from '../TenderTable/TenderContactDetails';
 // import moment from 'moment';
 import api from '../../constants/api';
 
-export default function BookingDetailComp({ bookingDetails, handleInputs, contact,addContactModal,addContactToggle,handleAddNewContact,AddNewContact }) {
+export default function BookingDetailComp({ bookingDetails, handleInputs, contact,addContactModal,addContactToggle,handleAddNewContact,AddNewContact,newContactData }) {
   BookingDetailComp.propTypes = {
     bookingDetails: PropTypes.object,
     handleInputs: PropTypes.func,
@@ -14,7 +14,7 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
     addContactModal: PropTypes.object,
     addContactToggle: PropTypes.object,
     handleAddNewContact: PropTypes.object,
-    // newContactData: PropTypes.object,
+    newContactData: PropTypes.object,
     AddNewContact: PropTypes.object,
     
    
@@ -105,18 +105,20 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                 <FormGroup>
                   {/* <Label>Customer Name</Label> */}
                   <Label>
-                  Customer Name (OR){' '}
-                    <span className="anchor" onClick={addContactToggle.bind(null)}>
+                  {/* Customer Name (OR){' '} */}
+                    {/* <span className="anchor" onClick={addContactToggle.bind(null)}>
                       <b>
                         <u>Add New</u>
                       </b>
-                    </span>
+                    </span> */}
+                    Customer Name
                   </Label>
                   <Input
                     type="select"
                     onChange={handleInputs}
                     value={bookingDetails && bookingDetails.contact_id}
                     name="contact_id"
+                    disabled
                   >
                     <option defaultValue="selected">Please Select</option>
                     {contact &&
@@ -133,6 +135,7 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                       addContactModal={addContactModal}
                       addContactToggle={addContactToggle}
                       AddNewContact={AddNewContact}
+                      newContactData={newContactData}
                       handleAddNewContact={handleAddNewContact}
                     ></TenderContactDetails>
                   </Input>
@@ -198,6 +201,11 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                     name="assign_time"
                   >
                     <option value="">Please Select</option>
+                    <option value="01:00 AM">01:00 AM</option>
+                    <option value="02:00 AM">02:00 AM</option>
+                    <option value="03:00 AM">03:00 AM</option>
+                    <option value="04:00 AM">04:00 AM</option>
+                    <option value="05:00 AM">05:00 AM</option>
                     <option value="06:00 AM">06:00 AM</option>
                     <option value="07:00 AM">07:00 AM</option>
                     <option value="08:00 AM">08:00 AM</option>
@@ -215,6 +223,8 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                     <option value="08:00 PM">08:00 PM</option>
                     <option value="09:00 PM">09:00 PM</option>
                     <option value="10:00 PM">10:00 PM</option>
+                    <option value="11:00 PM">11:00 PM</option>
+                    <option value="12:00 PM">12:00 AM</option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -227,7 +237,11 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                     onChange={handleInputs}
                     name="to_assign_time"
                   >
-                    <option value="">Please Select</option>
+                    <option value="01:00 AM">01:00 AM</option>
+                    <option value="02:00 AM">02:00 AM</option>
+                    <option value="03:00 AM">03:00 AM</option>
+                    <option value="04:00 AM">04:00 AM</option>
+                    <option value="05:00 AM">05:00 AM</option>
                     <option value="06:00 AM">06:00 AM</option>
                     <option value="07:00 AM">07:00 AM</option>
                     <option value="08:00 AM">08:00 AM</option>
@@ -245,6 +259,8 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                     <option value="08:00 PM">08:00 PM</option>
                     <option value="09:00 PM">09:00 PM</option>
                     <option value="10:00 PM">10:00 PM</option>
+                    <option value="11:00 PM">11:00 PM</option>
+                    <option value="12:00 PM">12:00 AM</option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -342,6 +358,20 @@ export default function BookingDetailComp({ bookingDetails, handleInputs, contac
                     onChange={handleInputs}
                     value={contactAddress && contactAddress.address_country}
                     name="address_country"
+                    disabled
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="3">
+                <FormGroup>
+                  <Label>
+              GST NO
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputs}
+                    value={contactAddress && contactAddress.gst_no}
+                    name="gst_no"
                     disabled
                   />
                 </FormGroup>

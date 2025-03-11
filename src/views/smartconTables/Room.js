@@ -122,7 +122,7 @@ const Room = () => {
                     </td>
                     <td>{element.room_type}</td>
                     {/* <td>{element.room_number}</td> */}
-                    <td>{element.capacity}</td>
+                    <td>{element.room_count}</td>
                     {/* <td>{element.floor_number}</td>
                     <td>{element.room_status}</td> */}
                   </tr>

@@ -221,6 +221,7 @@ const UserGroupTable = Loadable(lazy(() => import('../views/smartconTables/UserG
 const UserGroupDetails = Loadable(lazy(() => import('../views/DetailTable/UserGroupDetails')));
 const Support = Loadable(lazy(() => import('../views/smartconTables/Support')));
 const Translation = Loadable(lazy(() => import('../views/smartconTables/Translation')));
+const BookingPdfDetails = Loadable(lazy(() => import('../views/smartconTables/BookingPdfDetails')));
 
 
 //SupplierModal
@@ -471,6 +472,7 @@ const Routernew = () => {
           <Route path="/RoomDetails" name="Roomdata" element={<RoomDetails />}></Route>
           <Route path="/Product" name="clienttdata" element={<ProductTable />}></Route>
           <Route path="/Timesheet" name="clienttdata" element={<TimesheetTable />}></Route>
+          <Route path="/BookingPdfDetails" name="clienttdata" element={<BookingPdfDetails />}></Route>
           <Route
             path="/TimesheetDetails"
             name="clienttdata"

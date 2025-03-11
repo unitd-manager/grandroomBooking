@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+// import { Row, Col, Form, FormGroup, Label, Button, Input,InputGroup,Dropdown,DropdownMenu,DropdownToggle,DropdownItem } from 'reactstrap';
 import { Row, Col, Form, FormGroup, Label, Button, Input } from 'reactstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import Select from "react-select";
 import BreadCrumbs from '../../layouts/breadcrumbs/BreadCrumbs';
 import ComponentCard from '../../components/ComponentCard';
 // import BookingModal from '../../components/BookingTable/BookingModal';
@@ -62,11 +64,14 @@ const BookingDetails = () => {
     salutation: '',
     first_name: '',
     email: '',
-    position: '',
-    department: '',
     phone_direct: '',
-    fax: '',
     mobile: '',
+    address_flat: '',
+    address_state: '',
+    address_street: '',
+    address_po_code: '',
+    address_country: '',
+    gst_no:'',
   });
 
   const handleAddNewContact = (e) => {
@@ -86,7 +91,7 @@ const BookingDetails = () => {
         .then(() => {
           // getContact(newDataWithCompanyId.company_id);
           message('Contact Inserted Successfully', 'success');
-          window.location.reload();
+          // window.location.reload();
         })
         .catch(() => {
           message('Unable to add Contact! try again later', 'error');
@@ -166,6 +171,24 @@ const BookingDetails = () => {
     getCompany();
   }, [id]);
 
+  const options = company?.map((e) => ({
+    value: e.contact_id,
+    label: e.first_name,
+  }));
+
+//   const [dropdownOpen, setDropdownOpen] = useState(false);
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [selectedCustomer, setSelectedCustomer] = useState("Select Customer");
+
+//   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+
+//   // Filter customers based on search term
+//   const filteredCompany = company?.filter((e) =>
+//   (e.first_name && e.first_name.toLowerCase().includes(searchTerm.toLowerCase())) || 
+//   (e.phone_direct && e.phone_direct.toLowerCase().includes(searchTerm.toLowerCase()))
+// );
+
+
 
 
   return (
@@ -178,34 +201,84 @@ const BookingDetails = () => {
             <Form>
               <FormGroup>
                 <Row>
-                  <Col md="4">
-                    <Label>CustomerName </Label>
-                    <Label>
-                    Customer Name (OR){' '}
-                    <span className="anchor" onClick={addContactToggle.bind(null)}>
-                      <b>
-                        <u>Add New</u>
-                      </b>
-                    </span>
-                  </Label>
-                    <Input type="select" name="contact_id" onChange={handleBookingInputs}>
-                      <option>Select Customer</option>
-                      {company &&
-                        company.map((e) => {
-                          return (
-                            <option key={e.contact_id} value={e.contact_id}>
-                              {e.first_name}
-                            </option>
-                          );
-                        })}
-                         <TenderContactDetails
-                      addContactModal={addContactModal}
-                      addContactToggle={addContactToggle}
-                      AddNewContact={AddNewContact}
-                      handleAddNewContact={handleAddNewContact}
-                    ></TenderContactDetails>
-                    </Input>
-                  </Col>
+                <Col md="4">
+      <Label>
+        Customer Name (OR){" "}
+        <span className="anchor" onClick={addContactToggle}>
+          <b>
+            <u>Add New</u>
+          </b>
+        </span>
+      </Label>
+
+      <Select
+        options={options}
+        placeholder="Select or search customer..."
+        onChange={(selectedOption) =>
+          handleBookingInputs({ target: { name: "contact_id", value: selectedOption?.value } })
+        }
+        isSearchable
+      />
+
+      <TenderContactDetails
+        addContactModal={addContactModal}
+        addContactToggle={addContactToggle}
+        AddNewContact={AddNewContact}
+        handleAddNewContact={handleAddNewContact}
+        newContactData={newContactData}
+      />
+    </Col>
+
+    {/* <Col md="4">
+      <Label>
+        Customer Name (OR){" "}
+        <span className="anchor" onClick={addContactToggle}>
+          <b>
+            <u>Add New</u>
+          </b>
+        </span>
+      </Label>
+
+      <InputGroup>
+        <Input value={selectedCustomer} readOnly onClick={toggleDropdown} />
+        <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
+          <DropdownToggle caret>🔽</DropdownToggle>
+          <DropdownMenu>
+            <Input
+              type="text"
+              placeholder="Search customer..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              autoFocus
+            />
+            {filteredCompany?.length > 0 ? (
+              filteredCompany?.map((e) => (
+                <DropdownItem
+                  key={e.contact_id}
+                  onClick={() => {
+                    setSelectedCustomer(e.first_name);
+                    handleBookingInputs({ target: { name: "contact_id", value: e.contact_id } });
+                    setDropdownOpen(false);
+                  }}
+                >
+                  {e.first_name}
+                </DropdownItem>
+              ))
+            ) : (
+              <DropdownItem disabled>No customer found</DropdownItem>
+            )}
+          </DropdownMenu>
+        </Dropdown>
+      </InputGroup>
+
+      <TenderContactDetails
+        addContactModal={addContactModal}
+        addContactToggle={addContactToggle}
+        AddNewContact={AddNewContact}
+        handleAddNewContact={handleAddNewContact}
+        newContactData={newContactData}
+      />
+    </Col> */}
                   <Col md="4">
                 <FormGroup>
                   <Label>
@@ -271,14 +344,18 @@ const BookingDetails = () => {
                     onChange={handleBookingInputs}
                     name="assign_time"
                   >
-                    <option value="">Please Select</option>
+                     <option value="01:00 AM">01:00 AM</option>
+                    <option value="02:00 AM">02:00 AM</option>
+                    <option value="03:00 AM">03:00 AM</option>
+                    <option value="04:00 AM">04:00 AM</option>
+                    <option value="05:00 AM">05:00 AM</option>
                     <option value="06:00 AM">06:00 AM</option>
                     <option value="07:00 AM">07:00 AM</option>
                     <option value="08:00 AM">08:00 AM</option>
                     <option value="09:00 AM">09:00 AM</option>
                     <option value="10:00 AM">10:00 AM</option>
                     <option value="11:00 AM">11:00 AM</option>
-                    <option value="12:00 AM">12:00 AM</option>
+                    <option value="12:00 AM">12:00 PM</option>
                     <option value="01:00 PM">01:00 PM</option>
                     <option value="02:00 PM">02:00 PM</option>
                     <option value="03:00 PM">03:00 PM</option>
@@ -289,6 +366,8 @@ const BookingDetails = () => {
                     <option value="08:00 PM">08:00 PM</option>
                     <option value="09:00 PM">09:00 PM</option>
                     <option value="10:00 PM">10:00 PM</option>
+                    <option value="11:00 PM">11:00 PM</option>
+                    <option value="12:00 PM">12:00 AM</option>
                   </Input>
                 </FormGroup>
               </Col>
@@ -302,13 +381,18 @@ const BookingDetails = () => {
                     name="to_assign_time"
                   >
                     <option value="">Please Select</option>
+                    <option value="01:00 AM">01:00 AM</option>
+                    <option value="02:00 AM">02:00 AM</option>
+                    <option value="03:00 AM">03:00 AM</option>
+                    <option value="04:00 AM">04:00 AM</option>
+                    <option value="05:00 AM">05:00 AM</option>
                     <option value="06:00 AM">06:00 AM</option>
                     <option value="07:00 AM">07:00 AM</option>
                     <option value="08:00 AM">08:00 AM</option>
                     <option value="09:00 AM">09:00 AM</option>
                     <option value="10:00 AM">10:00 AM</option>
                     <option value="11:00 AM">11:00 AM</option>
-                    <option value="12:00 AM">12:00 AM</option>
+                    <option value="12:00 AM">12:00 PM</option>
                     <option value="01:00 PM">01:00 PM</option>
                     <option value="02:00 PM">02:00 PM</option>
                     <option value="03:00 PM">03:00 PM</option>
@@ -319,7 +403,8 @@ const BookingDetails = () => {
                     <option value="08:00 PM">08:00 PM</option>
                     <option value="09:00 PM">09:00 PM</option>
                     <option value="10:00 PM">10:00 PM</option>
-                  </Input>
+                    <option value="11:00 PM">11:00 PM</option>
+                    <option value="12:00 PM">12:00 AM</option>                  </Input>
                 </FormGroup>
               </Col>
             

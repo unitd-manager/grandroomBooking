@@ -74,7 +74,7 @@ const BookingEdit = () => {
         setBookingDetails(res.data.data[0]);
       })
       .catch(() => {
-        message('Booking Data Not Found', 'info');
+        // message('Booking Data Not Found', 'info');
       });
   };
  
@@ -135,7 +135,7 @@ const BookingEdit = () => {
         setServiceLinkedDetails(res.data.data[0]);
       })
       .catch(() => {
-        message('service linked not found', 'info');
+        // message('service linked not found', 'info');
       });
   };
 
@@ -151,6 +151,7 @@ const BookingEdit = () => {
     address_street: '',
     address_po_code: '',
     address_country: '',
+    gst_no:'',
   });
 
   const handleAddNewContact = (e) => {

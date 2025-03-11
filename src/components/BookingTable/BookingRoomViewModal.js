@@ -15,6 +15,8 @@ import PropTypes from 'prop-types';
 // import message from '../Message';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import '../../views/form-editor/editor.scss';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import MyDocument from '../../views/smartconTables/MyDocument';
 
 // import api from '../../constants/api';
 
@@ -265,12 +267,20 @@ const ContactEditModal = ({
         </ModalBody>
 
         <ModalFooter>
-          {/* <Button color="primary" onClick={editContactsData}>
-            Submit
-          </Button> */}
-          <Button color="secondary" onClick={() => setEditContactViewModal(false)}>
-            Cancel
+        <Button color="secondary" onClick={() => setEditContactViewModal(false)}>
+        Back
           </Button>
+     <Button color="secondary">
+    <PDFDownloadLink document={<MyDocument contactinsert={contactinsert} />} fileName="room_details.pdf">
+      {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
+    </PDFDownloadLink>
+    </Button>
+
+    <PDFViewer width="100%" height="600">
+      <MyDocument contactinsert={contactinsert} />
+    </PDFViewer>
+  
+         
         </ModalFooter>
       </Modal>
     </>

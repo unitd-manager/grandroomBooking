@@ -21,12 +21,14 @@ export default function TenderContactDetails({
   addContactModal,
   addContactToggle,
   AddNewContact,
+  newContactData,
 }) {
   TenderContactDetails.propTypes = {
     handleAddNewContact: PropTypes.any,
     addContactModal: PropTypes.object,
     addContactToggle: PropTypes.any,
     AddNewContact: PropTypes.any,
+    newContactData: PropTypes.any,
   };
 
   return (
@@ -60,25 +62,25 @@ export default function TenderContactDetails({
                           <Label>
                             Name<span className="required"> *</span>
                           </Label>
-                          <Input type="text" name="first_name" onChange={handleAddNewContact} />
+                          <Input type="text" name="first_name" value={newContactData && newContactData.first_name} onChange={handleAddNewContact} />
                         </FormGroup>
                       </Col>
                       <Col md="4">
                         <FormGroup>
                           <Label>Email</Label>
-                          <Input type="text" name="email" onChange={handleAddNewContact} />
+                          <Input type="text" name="email"  value={newContactData && newContactData.email}onChange={handleAddNewContact} />
                         </FormGroup>
                       </Col>
                       <Col md="4">
                         <FormGroup>
                           <Label>Phone (Direct)</Label>
-                          <Input type="number" name="phone_direct" onChange={handleAddNewContact} />
+                          <Input type="number" name="phone_direct" value={newContactData && newContactData.phone_direct} onChange={handleAddNewContact} />
                         </FormGroup>
                       </Col>
                       <Col md="4">
                         <FormGroup>
                           <Label>Mobile</Label>
-                          <Input type="number" name="mobile" onChange={handleAddNewContact} />
+                          <Input type="number" name="mobile" value={newContactData && newContactData.mobile} onChange={handleAddNewContact} />
                         </FormGroup>
                       </Col>
                       <Col md="4">
@@ -90,6 +92,7 @@ export default function TenderContactDetails({
                     type="text"
                     onChange={handleAddNewContact}
                     name="address_flat"
+                    value={newContactData && newContactData.address_flat}
                   />
                 </FormGroup>
               </Col>
@@ -101,6 +104,7 @@ export default function TenderContactDetails({
                   <Input
                     type="text"
                     onChange={handleAddNewContact}
+                    value={newContactData && newContactData.address_state}
                     name="address_state"
                   />
                 </FormGroup>
@@ -113,6 +117,7 @@ export default function TenderContactDetails({
                   <Input
                     type="text"
                     onChange={handleAddNewContact}
+                    value={newContactData && newContactData.address_street}
                     name="address_street"
                   />
                 </FormGroup>
@@ -125,6 +130,7 @@ export default function TenderContactDetails({
                   <Input
                     type="text"
                     onChange={handleAddNewContact}
+                    value={newContactData && newContactData.address_po_code}
                     name="address_po_code"
                   />
                 </FormGroup>
@@ -137,7 +143,21 @@ export default function TenderContactDetails({
                   <Input
                     type="text"
                     onChange={handleAddNewContact}
+                    value={newContactData && newContactData.address_country}
                     name="address_country"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="4">
+                <FormGroup>
+                  <Label>
+               GST NO
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleAddNewContact}
+                    value={newContactData && newContactData.gst_no}
+                    name="gst_no"
                   />
                 </FormGroup>
               </Col>

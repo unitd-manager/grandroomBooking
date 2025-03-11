@@ -151,6 +151,20 @@ export default function ContactDetailComp({ contactDetails, handleInputs }) {
                   />
                 </FormGroup>
               </Col>
+              <Col md="4">
+                <FormGroup>
+                  <Label>
+               GST NO
+                  </Label>
+                  <Input
+                    type="text"
+                    onChange={handleInputs}
+                    value={contactDetails && contactDetails.gst_no}
+                    name="gst_no"
+                   
+                  />
+                </FormGroup>
+              </Col>
             </Row>
           </ComponentCard>
          
