@@ -80,7 +80,8 @@ function ViewFileComponentV2({ moduleId, roomName }) {
   height={200}
   alt={`${res.name}`}
   
-/> {res.name}
+/> 
+{/* {res.name} */}
                       </a>
                   </td>
                   <td style={tableStyle}>

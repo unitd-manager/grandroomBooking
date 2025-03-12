@@ -118,6 +118,7 @@ const Attendance = Loadable(lazy(() => import('../views/smartconTables/Attendanc
 const ProjectTable = Loadable(lazy(() => import('../views/smartconTables/Project')));
 const ClientTable = Loadable(lazy(() => import('../views/smartconTables/Client')));
 const BookingTable = Loadable(lazy(() => import('../views/smartconTables/Booking')));
+const Reservation = Loadable(lazy(() => import('../views/smartconTables/Reservation')));
 const RoomTable = Loadable(lazy(() => import('../views/smartconTables/Room')));
 const TimesheetTable = Loadable(lazy(() => import('../views/smartconTables/Timesheet')));
 const ProductTable = Loadable(lazy(() => import('../views/smartconTables/product')));
@@ -147,6 +148,7 @@ const OpportunityDetails = Loadable(lazy(() => import('../views/DetailTable/Oppo
 const ProductDetailsTable = Loadable(lazy(() => import('../views/DetailTable/ProductDetails')));
 const ClientDetailsTable = Loadable(lazy(() => import('../views/DetailTable/ClientDetails')));
 const BookingDetails = Loadable(lazy(() => import('../views/DetailTable/BookingDetails')));
+const ReservationDetails = Loadable(lazy(() => import('../views/DetailTable/ReservationDetails')));
 const RoomDetails = Loadable(lazy(() => import('../views/DetailTable/RoomDetails')));
 const TimesheetDetailsTable = Loadable(lazy(() => import('../views/DetailTable/TimesheetDetails')));
 // Finance Admin
@@ -240,6 +242,7 @@ const FinanceEdit = Loadable(lazy(() => import('../views/EditData/FinanceEdit'))
 const TrainingEdit = Loadable(lazy(() => import('../views/EditData/TrainingEdit')));
 const ProjectEdit = Loadable(lazy(() => import('../views/EditData/ProjectEdit')));
 const BookingEdit = Loadable(lazy(() => import('../views/EditData/BookingEdit')));
+const ReservationEdit = Loadable(lazy(() => import('../views/EditData/ReservationEdit')));
 const RoomEdit = Loadable(lazy(() => import('../views/EditData/RoomEdit')));
 const ClientEdit = Loadable(lazy(() => import('../views/EditData/ClientEdit')));
 const VehicleEdit = Loadable(lazy(() => import('../views/EditData/VehicleEdit')));
@@ -309,6 +312,7 @@ const Routernew = () => {
           <Route path="/TranslationEdit/:id" name="translationdata" element={<TranslationEdit />}></Route>
           <Route path="/ContactEdit/:id" name="Contactdata" element={<ContactEdit />}></Route>
           <Route path="/BookingEdit/:id" name="clienttdata" element={<BookingEdit />}></Route>
+          <Route path="/ReservationEdit/:id" name="clienttdata" element={<ReservationEdit />}></Route>
           <Route path="/RoomEdit/:id" name="clienttdata" element={<RoomEdit />}></Route>
           <Route
             path="/expenseHeadEdit/:id"
@@ -467,8 +471,10 @@ const Routernew = () => {
           <Route path="/Client" name="clienttdata" element={<ClientTable />}></Route>
           <Route path="/ClientDetails" name="clienttdata" element={<ClientDetailsTable />}></Route>
           <Route path="/Booking" name="clienttdata" element={<BookingTable />}></Route>
+          <Route path="/Reservation" name="clienttdata" element={<Reservation />}></Route>
           <Route path="/Room" name="clienttdata" element={<RoomTable />}></Route>
           <Route path="/BookingDetails" name="clienttdata" element={<BookingDetails />}></Route>
+          <Route path="/ReservationDetails" name="clienttdata" element={<ReservationDetails />}></Route>
           <Route path="/RoomDetails" name="Roomdata" element={<RoomDetails />}></Route>
           <Route path="/Product" name="clienttdata" element={<ProductTable />}></Route>
           <Route path="/Timesheet" name="clienttdata" element={<TimesheetTable />}></Route>
