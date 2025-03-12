@@ -87,7 +87,7 @@ const BookingDetails = () => {
     
     ) {
       api
-        .post('/tender/insertContact', newDataWithCompanyId)
+        .post('/contact/insertContact', newDataWithCompanyId)
         .then(() => {
           // getContact(newDataWithCompanyId.company_id);
           message('Contact Inserted Successfully', 'success');
