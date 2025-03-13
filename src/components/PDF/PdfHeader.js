@@ -17,7 +17,7 @@ const PdfHeader = ({ findCompany }) => {
       {
         text: `${findCompany('cp.companyAddress1')} ${findCompany(
           'cp.companyAddress2',
-        )} \n \n   ${findCompany('cp.companyAddress3')} \n \n  ${findCompany('cp.companyEmail')}`,
+        )} \n   ${findCompany('cp.companyAddress3')} \n ${findCompany('cp.companyPhone')}\n  ${findCompany('cp.companyEmail')}\n ${findCompany('cp.companyGstNo')}`,
         alignment: 'right',
         fontSize: 10,
       },

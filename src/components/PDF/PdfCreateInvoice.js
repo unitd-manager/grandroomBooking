@@ -324,16 +324,17 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
                 // },
                 // '\n',
                 {
-                  text: `SGST :${(createInvoice.sgst ? createInvoice.sgst : '').toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+                  text: `SGST : ${(createInvoice.sgst ? Number(createInvoice.sgst) : 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
                   style: ['textSize1'],
                   margin: [145, 0, 0, 0],
                 },
                 '\n',
                 {
-                  text: `CGST :${(createInvoice.cgst ? createInvoice.cgst : '').toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+                  text: `CGST : ${(createInvoice.cgst ? Number(createInvoice.cgst) : 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
                   style: ['textSize1'],
                   margin: [145, 0, 0, 0],
                 },
+                
                 '\n',
                 {
                   text: `Total :${calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
