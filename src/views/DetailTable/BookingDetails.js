@@ -213,7 +213,7 @@ const BookingDetails = () => {
 
   const options = company?.map((e) => ({
     value: e.contact_id,
-    label: e.first_name,
+    label: `${e.first_name} (${e.mobile})`,
   }));
 
 //   const [dropdownOpen, setDropdownOpen] = useState(false);
