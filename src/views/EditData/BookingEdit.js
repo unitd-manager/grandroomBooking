@@ -161,11 +161,16 @@ const BookingEdit = () => {
   const AddNewContact = () => {
     const newDataWithCompanyId = newContactData;
     // newDataWithCompanyId.company_id = selectedCompany;
-    if (
-      newDataWithCompanyId.salutation !== '' &&
-      newDataWithCompanyId.first_name !== '' 
-    
-    ) {
+    if (newDataWithCompanyId.first_name.trim() === '') {
+      message('Please fill Name field', 'warning');
+      return;
+    }
+  
+    if (!newDataWithCompanyId.phone || newDataWithCompanyId.phone.trim() === '') {
+      message('Please fill Mobile Number field', 'warning');
+      return;
+    }
+   
       api
         .post('/contact/insertContact', newDataWithCompanyId)
         .then(() => {
@@ -176,9 +181,7 @@ const BookingEdit = () => {
         .catch(() => {
           message('Unable to add Contact! try again later', 'error');
         });
-    } else {
-      message('All fields are required.', 'info');
-    }
+   
   };
 
   const [contactAddress, setContactAddress] = useState();

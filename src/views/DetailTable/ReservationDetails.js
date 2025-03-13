@@ -81,11 +81,31 @@ const ReservationDetails = () => {
   const AddNewContact = () => {
     const newDataWithCompanyId = newContactData;
     // newDataWithCompanyId.company_id = selectedCompany;
-    if (
-      newDataWithCompanyId.salutation !== '' &&
-      newDataWithCompanyId.first_name !== '' 
-    
-    ) {
+    if (newDataWithCompanyId.first_name.trim() === '') {
+      message('Please fill Name field', 'warning');
+      return;
+    }
+  
+    if (!newDataWithCompanyId.phone_direct || newDataWithCompanyId.phone_direct.trim() === '') {
+      message('Please fill Phone Direct field', 'warning');
+      return;
+    }
+
+    if (!newDataWithCompanyId.address_flat || newDataWithCompanyId.address_flat.trim() === '') {
+      message('Please fill Address field', 'warning');
+      return;
+    }
+
+     if (!newDataWithCompanyId.address_state || newDataWithCompanyId.address_state.trim() === '') {
+      message('Please fill Address State field', 'warning');
+      return;
+    }
+
+    if (!newDataWithCompanyId.address_po_code || newDataWithCompanyId.address_po_code.trim() === '') {
+      message('Please fill Postal Code field', 'warning');
+      return;
+    }
+   
       api
         .post('/contact/insertContact', newDataWithCompanyId)
         .then(() => {
@@ -96,9 +116,7 @@ const ReservationDetails = () => {
         .catch(() => {
           message('Unable to add Contact! try again later', 'error');
         });
-    } else {
-      message('All fields are required.', 'info');
-    }
+   
   };
   
   const calculateDays = (startDate, endDate) => {
@@ -134,6 +152,32 @@ const ReservationDetails = () => {
 
   //Logic for adding Booking in db
   const insertReservation = () => {
+
+    if (!reservationDetails) {
+      message("Booking details are missing.", "error");
+      return;
+    }
+  
+    if (!reservationDetails.contact_id ) {
+      message("Please fill Customer Name field ", "warning");
+      return;
+    }
+
+    if (!reservationDetails.booking_date ) {
+      message("Please fill From Date field", "warning");
+      return;
+    }
+    if (!reservationDetails.to_booking_date ) {
+      message("Please fill To Date field", "warning");
+      return;
+    }
+
+    if (!reservationDetails.assign_time ) {
+      message("Please fill Check In Time field", "warning");
+      return;
+    }
+
+
     api
       .post('/booking/getReservationValidationInsert', {
         booking_date: reservationDetails.booking_date,
@@ -344,6 +388,7 @@ const ReservationDetails = () => {
                     onChange={handleBookingInputs}
                     name="assign_time"
                   >
+                    <option value="">Please Select</option>
                      <option value="01:00 AM">01:00 AM</option>
                     <option value="02:00 AM">02:00 AM</option>
                     <option value="03:00 AM">03:00 AM</option>

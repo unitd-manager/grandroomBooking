@@ -81,11 +81,30 @@ const BookingDetails = () => {
   const AddNewContact = () => {
     const newDataWithCompanyId = newContactData;
     // newDataWithCompanyId.company_id = selectedCompany;
-    if (
-      newDataWithCompanyId.salutation !== '' &&
-      newDataWithCompanyId.first_name !== '' 
-    
-    ) {
+    if (newDataWithCompanyId.first_name.trim() === '') {
+      message('Please fill Name field', 'warning');
+      return;
+    }
+  
+    if (!newDataWithCompanyId.phone_direct || newDataWithCompanyId.phone_direct.trim() === '') {
+      message('Please fill Phone Direct field', 'warning');
+      return;
+    }
+
+    if (!newDataWithCompanyId.address_flat || newDataWithCompanyId.address_flat.trim() === '') {
+      message('Please fill Address field', 'warning');
+      return;
+    }
+
+     if (!newDataWithCompanyId.address_state || newDataWithCompanyId.address_state.trim() === '') {
+      message('Please fill Address State field', 'warning');
+      return;
+    }
+
+    if (!newDataWithCompanyId.address_po_code || newDataWithCompanyId.address_po_code.trim() === '') {
+      message('Please fill Postal Code field', 'warning');
+      return;
+    }
       api
         .post('/contact/insertContact', newDataWithCompanyId)
         .then(() => {
@@ -96,9 +115,7 @@ const BookingDetails = () => {
         .catch(() => {
           message('Unable to add Contact! try again later', 'error');
         });
-    } else {
-      message('All fields are required.', 'info');
-    }
+    
   };
   
   const calculateDays = (startDate, endDate) => {
@@ -134,38 +151,61 @@ const BookingDetails = () => {
 
   //Logic for adding Booking in db
   const insertBooking = () => {
+    if (!bookingDetails) {
+      message("Booking details are missing.", "error");
+      return;
+    }
+  
+    if (!bookingDetails.contact_id ) {
+      message("Please fill Customer Name field ", "warning");
+      return;
+    }
+
+    if (!bookingDetails.booking_date ) {
+      message("Please fill From Date field", "warning");
+      return;
+    }
+    if (!bookingDetails.to_booking_date ) {
+      message("Please fill To Date field", "warning");
+      return;
+    }
+
+    if (!bookingDetails.assign_time ) {
+      message("Please fill Check In Time field", "warning");
+      return;
+    }
+
+
+  
     api
-      .post('/booking/getBookingValidationInsert', {
+      .post("/booking/getBookingValidationInsert", {
         booking_date: bookingDetails.booking_date,
         to_booking_date: bookingDetails.to_booking_date,
         assign_time: bookingDetails.assign_time,
         to_assign_time: bookingDetails.to_assign_time,
         hall: bookingDetails.hall,
-        booking_id:id,
-        contact_id:bookingDetails.contact_id,
-        total_hour : calculateDays()
+        booking_id: id,
+        contact_id: bookingDetails.contact_id,
+        total_hour: calculateDays(),
       })
       .then((res1) => {
-        if (res1.data.msg === 'Booking already exists for this date, time, and hall') {
-          message('Booking already exists for this time slot and date.', 'warning');
-        } else if (bookingDetails.contact_id !== '') {
-      bookingDetails.creation_date = creationdatetime;
-      console.log('res1',res1)
-      
-         const insertedDataId = res1.data.data.insertId;
-      //     message('Booking inserted successfully.', 'success');
+        if (res1.data.msg === "Booking already exists for this date, time, and hall") {
+          message("Booking already exists for this time slot and date.", "warning");
+        } else {
+          bookingDetails.creation_date = creationdatetime;
+          console.log("res1", res1);
+  
+          const insertedDataId = res1.data.data.insertId;
           setTimeout(() => {
             navigate(`/BookingEdit/${insertedDataId}`);
           }, 300);
-     
-    } else {
-      message('Please fill all required fields', 'warning');
-    }
-  })
-  .catch(() => {
-    message('Unable to retrieve booking validation data.', 'error');
-  });
+        }
+      })
+      .catch(() => {
+        message("Unable to retrieve booking validation data.", "error");
+      });
   };
+  
 
   useEffect(() => {
     getCompany();
@@ -344,6 +384,7 @@ const BookingDetails = () => {
                     onChange={handleBookingInputs}
                     name="assign_time"
                   >
+                       <option value="">Please Select</option>
                      <option value="01:00 AM">01:00 AM</option>
                     <option value="02:00 AM">02:00 AM</option>
                     <option value="03:00 AM">03:00 AM</option>

@@ -71,7 +71,29 @@ const ContactEdit = () => {
   //Logic for edit data in db
   const editContactData = () => {
     contactDetails.modification_date = creationdatetime;
-    if (contactDetails.first_name !== '') {
+    if (contactDetails.first_name.trim() === '') {
+      message('Please fill Name field', 'warning');
+      return;
+    }
+  
+    if (!contactDetails.phone_direct || contactDetails.phone_direct.trim() === '') {
+      message('Please fill Phone Direct field', 'warning');
+      return;
+    }
+
+    if (!contactDetails.address_flat || contactDetails.address_flat.trim() === '') {
+      message('Please fill Address2 field', 'warning');
+      return;
+    }
+    if (!contactDetails.address_state || contactDetails.address_state.trim() === '') {
+      message('Please fill Address State field', 'warning');
+      return;
+    }
+
+    if (!contactDetails.address_po_code || contactDetails.address_po_code.trim() === '') {
+      message('Please fill Postal Code field', 'warning');
+      return;
+    }
       api
         .post('/contact/editContact', contactDetails)
         .then(() => {
@@ -80,9 +102,7 @@ const ContactEdit = () => {
         .catch(() => {
           message('Unable to edit record.', 'error');
         });
-    } else {
-      message('Please fill all required fields', 'warning');
-    }
+    
   };
 
   //For delete data in db

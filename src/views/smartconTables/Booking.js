@@ -87,8 +87,11 @@ const Booking = () => {
     //   name: 'Total Hour',
     // },
   
+    // {
+    //   name: 'Email',
+    // },
     {
-      name: 'Email',
+      name: 'Phone (Direct)',
     },
     {
       name: 'Mobile',
@@ -137,7 +140,8 @@ const Booking = () => {
                     <td>{element.assign_time}</td>
                     {/* <td>{element.to_assign_time}</td> */}
                     {/* <td>{element.total_hour}</td> */}
-                    <td>{element.email}</td>
+                    {/* <td>{element.email}</td> */}
+                    <td>{element.phone_direct}</td>
                     <td>{element.mobile}</td>
                     <td>{element.status}</td>
                   </tr>

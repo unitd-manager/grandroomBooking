@@ -48,8 +48,8 @@ export default function ContactDetailComp({ contactDetails, handleInputs }) {
                   <Input
                     type="text"
                     onChange={handleInputs}
-                    value={contactDetails && contactDetails.phone}
-                    name="phone"
+                    value={contactDetails && contactDetails.phone_direct}
+                    name="phone_direct"
                   />
                 </FormGroup>
               </Col>
