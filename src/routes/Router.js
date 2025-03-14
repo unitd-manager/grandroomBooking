@@ -141,6 +141,7 @@ const PayslipGeneratedReports = Loadable(
 );
 const IR8AReport = Loadable(lazy(() => import('../views/smartconTables/IR8AReport')));
 const ProfitLossReport = Loadable(lazy(() => import('../views/Reports/ProfitLossReport')));
+const SalesGstReport = Loadable(lazy(() => import('../views/Reports/SalesGstReport')));
 
 // Details Table
 const TenderDetailsTable = Loadable(lazy(() => import('../views/DetailTable/TenderDetails')));
@@ -635,6 +636,7 @@ const Routernew = () => {
           <Route path="/IR8AReport" name="clienttdata" element={<IR8AReport />}></Route>
           
           <Route path="/ProfitLossReport" name="clienttdata" element={<ProfitLossReport />}></Route>
+          <Route path="/SalesGstReport" name="clienttdata" element={<SalesGstReport />}></Route>
 
           <Route
             path="/PurchaseGstReport"

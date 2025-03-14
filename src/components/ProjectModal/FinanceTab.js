@@ -390,7 +390,10 @@ console.log('orderddddd',bookingService)
       sgst:sgstValue,
       cgst:cgstValue,
       status: 'Due',
-      invoice_code: invoiceCode
+      invoice_code: invoiceCode,
+      amount: totalAmount.total_amount,
+      sgst_per: '6',
+      cgst_per: '6',
     };
       // Insert invoice
       const res = await api.post("/finance/insertInvoice", updatedBookingService);
