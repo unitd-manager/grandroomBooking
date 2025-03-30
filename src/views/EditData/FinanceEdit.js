@@ -202,7 +202,7 @@ console.log('ids',id)
   const editFinanceData = () => {
     financeDetails.modification_date = creationdatetime;
     api
-      .post('/Finance/editFinances', financeDetails)
+      .post('/Finance/editFinancesCus', financeDetails)
       .then(() => {
         message('Record editted successfully', 'success');
       })

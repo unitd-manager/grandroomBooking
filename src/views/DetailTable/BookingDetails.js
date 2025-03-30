@@ -21,6 +21,8 @@ const BookingDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [company, setCompany] = useState();
+  const [contact, setContact] = useState([]);
+ 
 
   // const toggle = () => {
   //   setModal(!modal);
@@ -51,7 +53,18 @@ const BookingDetails = () => {
         setCompany(res.data.data);
       })
       .catch(() => {
-        message('Company not found', 'info');
+   
+      });
+  };
+
+  const getContactById = (contactId) => {
+    api
+      .post('/contact/getContactById',{contact_id:contactId})
+      .then((res) => {
+        setContact(res.data.data);
+      })
+      .catch(() => {
+     
       });
   };
 
@@ -187,6 +200,17 @@ const BookingDetails = () => {
         booking_id: id,
         contact_id: bookingDetails.contact_id,
         total_hour: calculateDays(),
+        first_name: contact[0]?.first_name,
+        email: contact[0]?.email,
+        phone_direct: contact[0]?.phone_direct,
+        mobile: contact[0]?.mobile,
+        address_flat: contact[0]?.address_flat,
+        address_state: contact[0]?.address_state,
+        address_street: contact[0]?.address_street,
+        address_po_code: contact[0]?.address_po_code,
+        address_country: contact[0]?.address_country,
+        gst_no:contact[0]?.gst_no,
+
       })
       .then((res1) => {
         if (res1.data.msg === "Booking already exists for this date, time, and hall") {
@@ -210,6 +234,10 @@ const BookingDetails = () => {
   useEffect(() => {
     getCompany();
   }, [id]);
+
+  useEffect(() => {
+    getContactById(bookingDetails && bookingDetails.contact_id);
+  }, [bookingDetails && bookingDetails.contact_id]);
 
   const options = company?.map((e) => ({
     value: e.contact_id,

@@ -96,6 +96,7 @@
     "react-table": "^7.7.0",
     "react-table-v6": "^6.8.6",
     "react-tagsinput": "^3.19.0",
+    "react-time-picker": "^7.0.0",
     "react-toastify": "^9.0.3",
     "react-validation": "^3.0.7",
     "reactstrap": "^9.2.0",
