@@ -59,12 +59,12 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
         message('Invoice Data Not Found', 'info');
       });
   };
-  const calculateTotal = () => {
-    const grandTotal = cancelInvoice.reduce((acc, element) => acc + element.amount, 0);
-    const gstValue = createInvoice.gst_value || 0;
-    const total = grandTotal + gstValue;
-    return total;
-  };
+  // const calculateTotal = () => {
+  //   const grandTotal = cancelInvoice.reduce((acc, element) => acc + element.amount, 0);
+  //   const gstValue = createInvoice.gst_value || 0;
+  //   const total = grandTotal + gstValue;
+  //   return total;
+  // };
   //console.log('2', gstTotal);
   const getInvoiceItemById = () => {
     api
@@ -337,7 +337,7 @@ const PdfCreateInvoice = ({ invoiceId, projectDetail }) => {
                 
                 '\n',
                 {
-                  text: `Total :${calculateTotal().toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
+                  text: `Total : ${(createInvoice.cgst ? Number(createInvoice.invoice_amount) : 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`,
                   style: ['textSize1'],
                   margin: [145, 0, 0, 0],
                 },
